@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  # ================================= Bot =====================================
+  bot:
+    image: bot
+    build:
+      context: .
+      dockerfile: ./docker/bot.Dockerfile
+    restart: unless-stopped
+    command: make run-telegram 
+    environment:
+      - TELEGRAM_BOT_USERNAME=${TELEGRAM_BOT_USERNAME}
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - TELEGRAM_WEBHOOK=${TELEGRAM_WEBHOOK}
+    ports:
+      - 5001:5001
+    depends_on:
+      - actions
+    volumes:
+      - ./bot:/bot
+      - ./scripts:/scripts
+    command: sh -c "make run-telegram"
+
+  actions:
+    build:
+      context: .
+      dockerfile: ./docker/actions.Dockerfile
+    ports:
+      - 5055:5055
+    volumes:
+      - ./bot/actions:/bot/actions
+      - ./bot/Makefile:/bot/Makefile
+    command: sh -c "make run-actions"
+
+  # =============================== Notebooks =================================
+  notebooks:
+    build:
+      context: .
+      dockerfile: ./docker/notebooks.Dockerfile
+    env_file:
+      - docker/notebooks.env
+    volumes:
+      - ./bot:/work/bot
+      - ./notebooks:/work/notebooks
+    ports:
+      - 8888:8888

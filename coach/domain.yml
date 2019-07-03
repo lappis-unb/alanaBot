@@ -1,0 +1,33 @@
+intents:
+  - out_of_scope
+  - ajuda
+  - action_test
+
+entities:
+  - command
+
+templates:
+  utter_default:
+    - text: |
+        Desculpe, ainda não sei falar sobre isso ou talvez não consegui entender direito
+        Você pode perguntar de novo de outro jeito?
+
+    - text: |
+        Hummmm... Não sei se entendi. Pode escrever de outra forma?
+
+    - text: |
+        Acho que não te entendi, você pode me perguntar de novo usando outras palavras?
+
+    - text: |
+        Vamos tentar mais uma vez? Eu não consegui te entender direito, me pergunta de outro jeito?
+
+  utter_ajuda:
+    - text: |
+        Esse bot envia notificações de atualizações nos projetos de lei que são relevantes para a privacidade, liberdade de expressão, acesso e questões de gênero no meio digital.
+
+  
+actions:
+  - utter_default
+  - utter_ajuda
+
+  - action_test
