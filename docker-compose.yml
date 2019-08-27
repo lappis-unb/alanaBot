@@ -138,6 +138,8 @@ services:
     volumes:
       - ./bot/actions:/bot/actions
       - ./bot/Makefile:/bot/Makefile
+    env_file:
+      - docker/bot-telegram.env
     command: sh -c "make run-actions"
 
   # =============================== Notebooks =================================
