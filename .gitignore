@@ -201,3 +201,6 @@ tags
 models/dialogue/
 
 models/nlu/current/
+
+export.sh
+*.env

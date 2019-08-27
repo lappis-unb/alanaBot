@@ -1,11 +1,7 @@
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
-<<<<<<< HEAD
  Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
-=======
- Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
->>>>>>> c27c4dcdfc5ae533971933648d77b16fef1be67a
  Everyone is permitted to copy and distribute verbatim copies
  of this license document, but changing it is not allowed.
 
@@ -649,7 +645,7 @@ the "copyright" line and a pointer to where the full notice is found.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 Also add information on how to contact you by electronic and paper mail.
 
