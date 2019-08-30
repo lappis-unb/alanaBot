@@ -177,8 +177,8 @@ services:
       dockerfile: ./docker/cronjob.Dockerfile
     volumes:
         - ./outputs:/cronjob/home
-    environment:
-      - TELEGRAM_DB_URI=mongodb://database:27017/bot
+    env_file:
+      - docker/bot-telegram.env
     stdin_open: true
     tty: true
 

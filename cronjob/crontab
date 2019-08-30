@@ -1,0 +1,2 @@
+15 * * * * export $(cat /cronjob/loaded-env.txt | xargs); /usr/local/bin/python3.6 /cronjob/populate_db.py >> /cronjob/home/out_cron.log 2>&1
+16 * * * * export $(cat /cronjob/loaded-env.txt | xargs); /usr/local/bin/python3.6 /cronjob/send_notification.py >> /cronjob/home/notification.log 2>&1

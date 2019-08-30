@@ -7,6 +7,7 @@ from pymongo import MongoClient
 import os
 import sys
 import logging
+import datetime
 
 
 class UpdateProjetos():
@@ -14,7 +15,9 @@ class UpdateProjetos():
         self.JSON_PALAVRAS_CHAVES = os.path.dirname(os.path.abspath(__file__)) + \
                                     '/palavras-chaves.json'
         self.URL_API_CAMARA = "https://dadosabertos.camara.leg.br/api/v2/"
-        self.QTY_DAYS = 1
+        self.QTY_DAYS = 3
+        self.PL_ARQUIVADO = "Arquivada"
+        self.URL_PLS_CAMARA = "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao={}" 
 
     def fetch_palavras_chaves(self):
         json_palavras_chaves = open(self.JSON_PALAVRAS_CHAVES, encoding="utf-8")
@@ -66,15 +69,12 @@ class UpdateProjetos():
             request_str = req_id.format(id_projeto)
             req_projeto = get(request_str, headers=headers)
             json_projeto = req_projeto.json()
-            db_data = self.build_projeto_dict(json_projeto)
-            db = self.connect_to_db()
-            self.save_projeto_to_db(db_data, db)
-            if json_projeto["dados"]["statusProposicao"]["descricaoSituacao"] not in lista_status: 
-                lista_status.append(json_projeto["dados"]["statusProposicao"]["descricaoSituacao"])
-        print('#'*30)
-        print('CHEGOU')
-        print('#'*30)
-
+            if json_projeto["dados"]["statusProposicao"]["descricaoSituacao"]:# if not None
+                if self.PL_ARQUIVADO != json_projeto["dados"]["statusProposicao"]["descricaoSituacao"]:
+                    db_data = self.build_projeto_dict(json_projeto)
+                    db = self.connect_to_db()
+                    self.save_projeto_to_db(db_data, db)
+        
     def get_number_of_pages(self, req_json):
         pages = {"first": 0, "last": 0}
         requests_projetos = []
@@ -121,12 +121,17 @@ class UpdateProjetos():
 
     
     def build_projeto_dict(self, json_projeto):
+        pl_date = datetime.datetime.strptime(json_projeto["dados"]["statusProposicao"]["dataHora"],
+                                             "%Y-%m-%dT%H:%M").strftime("%d/%m/%Y")
+        url_camara = self.URL_PLS_CAMARA.format(str(json_projeto["dados"]["id"]))
         db_data = {
             "ementa": json_projeto["dados"]["ementa"],
             "tramitacao": json_projeto["dados"]["statusProposicao"]["despacho"],
             "sigla": json_projeto["dados"]["siglaTipo"],
             "numero": json_projeto["dados"]["numero"],
-            "ano": json_projeto["dados"]["ano"]
+            "ano": json_projeto["dados"]["ano"],
+            "data": pl_date,
+            "urlPL": url_camara
         }
         return db_data
 

@@ -46,7 +46,8 @@ class ActionStart(Action):
 		user_data = {
 			"sender_id": sender_id,
 			"first_name": telegram_data['first_name'],
-			"username": telegram_data['username']
+			"username": telegram_data['username'],
+			"registered": False
 		}
 		return user_data
 		
