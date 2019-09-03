@@ -1,9 +1,10 @@
 from rasa_core_sdk import Action
 from rasa_core_sdk.events import SlotSet
 from pymongo import MongoClient
-from .constants import TELEGRAM_DB_URI
+from .constants import TELEGRAM_DB_URI, TELEGRAM_TOKEN
 import sys
 import logging
+import telegram
 
 
 class ActionDescadastro(Action):
@@ -27,9 +28,27 @@ class ActionDescadastro(Action):
 			dispatcher.utter_message(ValueError)
 		return []
 
+	def build_user_data(self, sender_id):
+		bot = telegram.Bot(TELEGRAM_TOKEN)
+		telegram_data = bot.get_chat(sender_id)
+		user_data = {
+			"sender_id": sender_id,
+			"first_name": telegram_data['first_name'],
+			"username": telegram_data['username'],
+			"registered": False
+		}
+		return user_data
+
+
 	def unregister_telegram_user(self, user_data, db):
-		user = db.User.find_one(user_data)
-		user_id = user['_id']
-		db.User.update_one({"_id": user_id},
-							{"$set": {"registered": False}})
-		logging.info('User unregistered notification in telegram database')
+		users = db["User"]
+		query = { "sender_id": user_data["sender_id"] }
+		user = users.find_one(query)
+		if user is None:
+			user_data = self.build_user_data(user_data["sender_id"])
+			db.User.insert_one(user_data)
+		else:
+			user_id = user['_id']
+			db.User.update_one({"_id": user_id},
+								{"$set": {"registered": False}})
+			logging.info('User unregistered notification in telegram database')
