@@ -205,3 +205,4 @@ models/nlu/current/
 export.sh
 *.env
 outputs/
+.vscode/

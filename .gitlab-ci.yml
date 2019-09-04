@@ -6,7 +6,7 @@ variables:
 
 stages:
   - test style
-  - test stories
+  # - test stories
   - build requirements
   - build coach
   - build
@@ -27,17 +27,17 @@ test style:
 #############################################################
 ############### TEST STORIES ################################
 #############################################################
-test stories:
-  stage: test stories
-  image: docker
-  tags:
-    - docker
-  services:
-    - docker:dind
-  script:
-    - docker build -f docker/coach.Dockerfile -t $COACH_IMAGE:latest .
-    - docker build -f docker/bot.Dockerfile -t $BOT_IMAGE:latest .
-    - docker run --rm $BOT_IMAGE:latest make test-stories
+# test stories:
+#   stage: test stories
+#   image: docker
+#   tags:
+#     - docker
+#   services:
+#     - docker:dind
+#   script:
+#     - docker build -f docker/coach.Dockerfile -t $COACH_IMAGE:latest .
+#     - docker build -f docker/bot.Dockerfile -t $BOT_IMAGE:latest .
+#     - docker run --rm $BOT_IMAGE:latest make test-stories
 
 
 #############################################################
