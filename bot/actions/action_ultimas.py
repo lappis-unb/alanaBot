@@ -1,5 +1,5 @@
 from rasa_core_sdk import Action
-from pymongo import MongoClient
+from pymongo import MongoClient, DESCENDING
 from .constants import TELEGRAM_DB_URI, TELEGRAM_TOKEN
 import telegram
 
@@ -46,7 +46,9 @@ class ActionUltimas(Action):
     def get_all_projects(self, db, number_of_projects):
         projects_to_send = []
         project_collection = db["Project"]
-        projects = project_collection.find({})
+        projects = project_collection.find({})\
+                                     .sort("data",
+                                           DESCENDING)
         for i, project in enumerate(projects, start=1):
             if i <= number_of_projects:
                 projects_to_send.append(project)
