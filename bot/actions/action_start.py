@@ -18,18 +18,15 @@ class ActionStart(Action):
             user_data = self.build_user_data(sender_id)
             self.save_telegram_user(user_data, db)
             dispatcher.utter_message(
-                "Esse bot envia notificações de atualizações "
-                "nos projetos de lei que são relevantes para "
-                "a privacidade, liberdade de expressão, acesso "
-                "e questões de gênero no meio digital. A lista "
-                "completa dos projetos atualmente monitorados está "
-                "em https://codingrights.gitlab.io/pls/."
+                "Olá! Esse bot envia atualizações na tramitação "
+                "de proposições legislativas relevantes para "
+                "infâncias e adolescências brasileiras."
             )
             dispatcher.utter_message(
                 "Esta é a versão beta, logo teremos mais "
                 "funcionalidades e comandos implementados. "
                 "Se você tem sugestões, também pode entrar "
-                "em contato pelo email contact@codingrights.org"
+                "em contato pelo email contato@prioridadeabsoluta.org.br"
             )
             dispatcher.utter_message(
                 "Use os seguintes comandos para interagir com o bot:"

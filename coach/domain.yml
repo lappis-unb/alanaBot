@@ -38,7 +38,7 @@ templates:
 
   utter_ajuda:
     - text: |
-        Esse bot envia notificações de atualizações nos projetos de lei que são relevantes para a privacidade, liberdade de expressão, acesso e questões de gênero no meio digital.
+        Esse bot envia atualizações na tramitação de proposições legislativas relevantes para infâncias e adolescências brasileiras.
 
   
 actions:

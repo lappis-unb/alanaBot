@@ -33,8 +33,6 @@ def get_todays_pls(db):
 def send_notification(registered_users, pls):
     bot = telegram.Bot(token=os.getenv("TELEGRAM_TOKEN", ""))
     for user in registered_users:
-        bot.send_message(chat_id=user["sender_id"],
-                         text="Enviando notificação sobre pls")
         for i, _ in enumerate(pls):
             message = (
                 "*{data}*\n"
