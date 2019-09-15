@@ -8,7 +8,7 @@
 
 ## action_start
 * start
-    - action_start
+    - utter_cumprimentar
 
 ## action_ultimas
 * ultimas

@@ -1,3 +1,15 @@
+## path_cumprimentar+sobre_nos
+* action_start
+  - utter_cumprimentar
+* sobre_nos
+  - utter_sobre_nos
+
+## path_cumprimentar+ajuda
+* action_start
+  - utter_cumprimentar
+* ajuda
+  - utter_ajuda
+
 ## fallback
 * out_of_scope
     - utter_default
@@ -5,3 +17,33 @@
 ## path_ajuda
 * ajuda
   - utter_ajuda
+
+## path_despedir
+* despedir
+  - utter_despedir
+
+## path_tudo_bem
+* tudo_bem
+  -  utter_tudo_bem
+
+## path_tudo_bem+sobre_nos
+* tudo_bem
+  -  utter_tudo_bem
+* sobre_nos
+  - utter_sobre_nos
+
+## path_tudo_bem+ajuda
+* tudo_bem
+  -  utter_tudo_bem
+* ajuda
+  - utter_ajuda
+
+## path_sugestao
+* sugestao
+  - utter sugestao
+
+## path_sugestao+sobre_nos
+* sobre_nos
+  - utter_sobre_nos
+* sugestao
+  - utter sugestao
