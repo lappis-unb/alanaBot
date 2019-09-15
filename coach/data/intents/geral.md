@@ -1,3 +1,48 @@
+## intent: cumprimentar
+- oi
+- hi
+- olá
+- ola
+- oii
+- oie
+- hey
+- oiee
+- opa
+- eai
+- eaí
+- ola boa tarde
+- oi alana
+- ola alana
+- ola alana, tudo bom
+- ola alana, que saudade de vc
+- oi alana saudades
+- posso falar com voce
+- pode me tirar uma duvida
+- gostaria de tirar uma duvida
+- podemos conversar
+- bom dia
+- boa tarde
+- boa noite
+
+## intent: tudo_bem
+- oi alana, como estão as coisas
+- oi alana, como estao as coisas
+- oi alana, como vai
+- oi alana, tudo bem
+- oi alana, tá bem
+- como estão as coisas
+- como estao as coisas
+- como vai a vida
+- como está
+- como esta
+- como vai
+- tudo bem
+- tá boa
+- tudo de boa
+- td de boa
+- td bem
+- tá bem
+
 ## intent:out_of_scope
 - Você fala sobre o meio ambiente?
 - Qual a origem do mundo?

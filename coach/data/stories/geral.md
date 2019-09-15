@@ -1,11 +1,15 @@
+## path_cumprimentar
+* cumprimentar
+    - utter_cumprimentar
+
 ## path_cumprimentar+sobre_nos
-* action_start
+* cumprimentar
   - utter_cumprimentar
 * sobre_nos
   - utter_sobre_nos
 
 ## path_cumprimentar+ajuda
-* action_start
+* cumprimentar
   - utter_cumprimentar
 * ajuda
   - utter_ajuda
