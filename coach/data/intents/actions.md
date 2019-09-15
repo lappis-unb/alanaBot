@@ -10,19 +10,26 @@
 - [start](command)
 - [/start](command)
 - oi
+- hi
 - olá
+- ola
+- oii
 - oie
+- hey
 - oiee
 - opa
+- eai
+- eaí
 - ola boa tarde
 - oi alana
+- ola alana
 - ola alana, tudo bom
 - ola alana, que saudade de vc
 - oi alana saudades
-- oi, como vai você
 - posso falar com voce
 - pode me tirar uma duvida
 - gostaria de tirar uma duvida
+- podemos conversar
 - bom dia
 - boa tarde
 - boa noite
