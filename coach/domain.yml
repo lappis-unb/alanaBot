@@ -2,6 +2,7 @@ intents:
   - out_of_scope
   - ajuda
   - tudo_bem
+  - menu_voltar
   - sugestoes
   - sobre_nos
   - cadastrar
@@ -97,12 +98,12 @@ templates:
 
   utter_sobre_nos:
     - text: |
-    O Prioridade Absoluta é um programa do Instituto Alana criado com a missão de dar efetividade e visibilidade 
-    ao Artigo 227 da Constituição Federal do Brasil, que estabelece os direitos e o melhor interesse de crianças 
-    e adolescentes como absoluta prioridade das famílias, da sociedade e do Estado. 
-    Para conhecer mais acesse o nosso siste: https://prioridadeabsoluta.org.br/.
-    Se você deseja voltar para o menu digite: /voltarmenu
-    Para me dar uma sugestão digite: /sugestao
+        O Prioridade Absoluta é um programa do Instituto Alana criado com a missão de dar efetividade e visibilidade 
+        ao Artigo 227 da Constituição Federal do Brasil, que estabelece os direitos e o melhor interesse de crianças 
+        e adolescentes como absoluta prioridade das famílias, da sociedade e do Estado. 
+        Para conhecer mais acesse o nosso siste: https://prioridadeabsoluta.org.br/.
+        Se você deseja voltar para o menu digite: /voltarmenu
+        Para me dar uma sugestão digite: /sugestao
 
   utter_despedir:
     - text: |

@@ -43,6 +43,19 @@
 - td bem
 - tá bem
 
+## intent: menu_voltar
+- quero voltar para o menu
+- preciso voltar ao menu
+- quero ir para o menu
+- quero voltar
+- voltar menu
+- /voltarmenu
+- volta menu
+- /voltamenu
+- /voltar
+- voltar
+- menu
+
 ## intent:out_of_scope
 - Você fala sobre o meio ambiente?
 - Qual a origem do mundo?

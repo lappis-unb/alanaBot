@@ -22,6 +22,22 @@
 * ajuda
   - utter_ajuda
 
+## path_menu
+* menu_voltar
+  - utter_ajuda
+
+## path_menu+sugestao
+* sugestao
+  - utter_sugestao
+* menu_voltar
+  - utter_ajuda
+
+## path_menu+sobre_nos
+* menu_voltar
+  - utter_ajuda
+* sobre_nos
+  - utter_sobre_nos
+
 ## path_despedir
 * despedir
   - utter_despedir
@@ -44,10 +60,10 @@
 
 ## path_sugestao
 * sugestao
-  - utter sugestao
+  - utter_sugestao
 
 ## path_sugestao+sobre_nos
 * sobre_nos
   - utter_sobre_nos
 * sugestao
-  - utter sugestao
+  - utter_sugestao
