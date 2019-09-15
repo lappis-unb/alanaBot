@@ -119,3 +119,54 @@
 - quero me descadastrar
 - me descadastra
 - descadastrar
+
+## intent:despedir
+- tchau
+- até logo
+- namaste
+- sayonara
+- até mais
+- até breve
+- falou, valeu
+- flw vlw
+- até mais
+- até a próxima
+
+## intent:sugestao
+- quero te dizer uma sugestão
+- quero te dizer uma sugestao
+- quero te falar uma sugestão
+- quero te falar uma sugestao
+- quero te dar uma sugestão
+- quero te dar uma sugestao
+- quero seu email
+- quero um email
+- preciso de email
+- você podia falar sobre
+- voce podia falar sobre
+- você precisa melhorar
+- vc precisa melhorar
+- /sugestao
+- sugestão
+- sugestao
+- email
+
+## intent:sobre_nos
+- que tipo de trabalho vocês desenvolvem
+- me fala sobre a ong que você trabalha
+- me fala sobre o projeto de vocês
+- me fala sobre o projeto de voces
+- quero saber mais do projeto
+- sobre o trabalho de vocês
+- projeto prioridade absoluta
+- prioridade absoluta
+- iniciativa alana
+- que ong é essa
+- /sobre nós
+- /sobre nos
+- /sobrenós
+- /sobrenos
+- sobre nós
+- sobre nos
+- sobrenos
+- ong
