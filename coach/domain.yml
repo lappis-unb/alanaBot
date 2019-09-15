@@ -1,6 +1,9 @@
 intents:
   - out_of_scope
   - ajuda
+  - tudo_bem
+  - sugestoes
+  - sobre_nos
   - cadastrar
   - descadastrar
   - requisicao_ultimas
@@ -36,14 +39,80 @@ templates:
     - text: |
         Vamos tentar mais uma vez? Eu não consegui te entender direito, me pergunta de outro jeito?
 
+  utter_cumprimentar:
+    - text: |
+        Oi, eu sou a Alana, a Assistente Virtual do programa Prioridade Absoluta.
+        Estou aqui para te informar sobre as novidades das proposições de Leis para Crianças e Adolescentes.
+        Afinal, cuidar das crianças e dos adolescentes, é cuidar de todos nós!
+
+        Para conversar comigo basta escolher qual opção você prefere no momento:
+
+        /cadastrar - Caso você deseje receber notificações sobre as novidades das Leis
+        /descadastrar - Para deixar de receber as notificações
+        /ajuda - Para entender como podemos interagir
+        /ultimas - Para saber sobre as últimas novidades de Leis
+        /sobrenos - Para conhecer um pouco mais sobre o nosso trabalho
+        (você também pode me informar o número de tramitações que quer ver. Como neste exemplo: /ultimas 5).
+
+        O que você deseja?
+
+  utter_tudo_bem:
+    - text: |
+        Estou bem, obrigada. Em que posso te ajudar?
+
+        /cadastrar - Caso você deseje receber notificações sobre as novidades das Leis
+        /descadastrar - Para deixar de receber as notificações
+        /ajuda - Para entender como podemos interagir
+        /ultimas - Para saber sobre as últimas novidades de Leis
+        /sobrenos - Para conhecer um pouco mais sobre o nosso trabalho
+        (você também pode me informar o número de tramitações que quer ver. Como neste exemplo: /ultimas 5).
+
+  utter_sugestao:
+    - text: |
+        Eu ainda estou em fase de testes e estou aprendendo com vocês, se você tem alguma sugestão de conteúdo 
+        me envia nesse email: contato@prioridadeabsoluta.org.br
+        Se você deseja voltar ao menu digite: /voltarmenu
+
   utter_ajuda:
     - text: |
-        Esse bot envia atualizações na tramitação de proposições legislativas relevantes para infâncias e adolescências brasileiras.
+        Eu posso te enviar atualizações sobre as leis. Para isso posso te cadastrar, caso você escolha a opção /cadastrar.
+        Posso te /descadastrar, se você não quiser mais receber as minhas notificações.
 
-  
+        E, posso te enviar as novidades que estão ocorrendo nas proposições de leis para Crianças e Adolescentes.
+        Todas que forem relevantes!
+
+        Posso também te falar um pouco do nosso trabalho na opção /sobrenos.
+        Você pode escolher o número de tramitações que deseja ver da seguinte forma: /ultimas 4.
+
+        Como posso te ajudar?
+        /cadastrar
+        /descadastrar
+        /sobrenos
+        /ultimas
+
+  utter_sobre_nos:
+    - text: |
+    O Prioridade Absoluta é um programa do Instituto Alana criado com a missão de dar efetividade e visibilidade 
+    ao Artigo 227 da Constituição Federal do Brasil, que estabelece os direitos e o melhor interesse de crianças 
+    e adolescentes como absoluta prioridade das famílias, da sociedade e do Estado. 
+    Para conhecer mais acesse o nosso siste: https://prioridadeabsoluta.org.br/.
+    Se você deseja voltar para o menu digite: /voltarmenu
+    Para me dar uma sugestão digite: /sugestao
+
+  utter_despedir:
+    - text: |
+        Espero ter te ajudado a entender um pouco mais sobre as leis que podem ajudar as Crianças e Adolescentes.
+        Juntos podemos cuidar de quem precisa!
+        Até a próxima!
+
 actions:
   - utter_default
   - utter_ajuda
+  - utter_cumprimentar
+  - utter_tudo_bem
+  - utter_sugestao
+  - utter_despedir
+  - utter_sobre_nos
 
   - action_start
   - action_descadastro
