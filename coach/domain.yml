@@ -52,6 +52,7 @@ templates:
         /ajuda - Para entender como podemos interagir
         /ultimas - Para saber sobre as últimas novidades de Leis
         /sobrenos - Para conhecer um pouco mais sobre o nosso trabalho
+        /sugestao - Para me dizer uma sugestão
         (você também pode me informar o número de tramitações que quer ver. Como neste exemplo: /ultimas 5).
 
         O que você deseja?
@@ -65,6 +66,7 @@ templates:
         /ajuda - Para entender como podemos interagir
         /ultimas - Para saber sobre as últimas novidades de Leis
         /sobrenos - Para conhecer um pouco mais sobre o nosso trabalho
+        /sugestao - Para me dizer uma sugestão
         (você também pode me informar o número de tramitações que quer ver. Como neste exemplo: /ultimas 5).
 
   utter_sugestao:
@@ -80,15 +82,18 @@ templates:
 
         E, posso te enviar as novidades que estão ocorrendo nas proposições de leis para Crianças e Adolescentes.
         Todas que forem relevantes!
+        Você pode escolher o número de tramitações que deseja ver da seguinte forma: /ultimas 4.
 
         Posso também te falar um pouco do nosso trabalho na opção /sobrenos.
-        Você pode escolher o número de tramitações que deseja ver da seguinte forma: /ultimas 4.
+        Você pode me dizer uma sugestão escolhendo a opção /sugestao
+        
 
         Como posso te ajudar?
         /cadastrar
         /descadastrar
         /sobrenos
         /ultimas
+        /sugestao
 
   utter_sobre_nos:
     - text: |
