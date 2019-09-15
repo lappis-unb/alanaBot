@@ -8,6 +8,9 @@
 ## intent:ajuda
 - [ajuda](command)
 - [/ajuda](command)
+- voce pode me ajudar
+- você pode me ajudar
+- preciso de ajuda
 - sobre o que você sabe falar
 - o que mais você sabe falar
 - quais assuntos você fala
@@ -24,28 +27,50 @@
 - me ajude
 - ajuda eu
 - ajuda
+- ajudar
 - menu
 
 ## intent:cadastrar
 - [cadastrar](command)
 - [/cadastrar](command)
 - quero receber notificações de pls
-- me manda notificações de pls
-- me manda notificações
-- me cadastra, por favor
-- me cadastra
-- quero me cadastrar
 - quero me cadastrar, por favor
+- quero receber notificações
+- me manda notificações de pls
+- me envia as atualizações das leis
+- me envia as atualizacoes
+- me envia as atualizações
+- me envia as notificações
+- me envia as notificacoes
+- me manda as notificações
+- me manda as notificacoes
+- me manda notificações
+- me manda notificacoes
+- me cadastra, por favor
+- quero me cadastrar
+- quero me inscrever
+- notificações
+- notificacoes
+- me cadastra
+- me inscreve
+- atualizações
+- atualizacoes
 
 ## intent:descadastrar
 - [descadastrar](command)
 - [/descadastrar](command)
 - para de me mandar notificações
 - para de me mandar notificações de pls
-- não quero receber notificações de pls
+- não quero receber notificações de 
+- quero me descadastrar, por favor
 - não quero receber notificações
 - me descadastra, por favor
-- me descadastra
+- não quero mais receber notificações
+- nao quero mais receber notificacoes
+- não me envia mais notificações
+- não me envia mais notificacoes
+- não quero mais receber
+- nao quero mais receber
 - quero me descadastrar
-- quero me descadastrar, por favor
-
+- me descadastra
+- descadastrar
