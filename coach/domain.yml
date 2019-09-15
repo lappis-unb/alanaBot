@@ -48,13 +48,13 @@ templates:
 
         Para conversar comigo basta escolher qual opção você prefere no momento:
 
-        /cadastrar - Caso você deseje receber notificações sobre as novidades das Leis
-        /descadastrar - Para deixar de receber as notificações
-        /ajuda - Para entender como podemos interagir
-        /ultimas - Para saber sobre as últimas novidades de Leis
-        /sobrenos - Para conhecer um pouco mais sobre o nosso trabalho
-        /sugestao - Para me dizer uma sugestão
-        (você também pode me informar o número de tramitações que quer ver. Como neste exemplo: /ultimas 5).
+        #cadastrar - Caso você deseje receber notificações sobre as novidades das Leis
+        #descadastrar - Para deixar de receber as notificações
+        #ajuda - Para entender como podemos interagir
+        #ultimas - Para saber sobre as últimas novidades de Leis
+        (você também pode me informar o número de tramitações que quer ver. Como neste exemplo: #ultimas 5)
+        #sobrenos - Para conhecer um pouco mais sobre o nosso trabalho
+        #sugestao - Para me dizer uma sugestão
 
         O que você deseja?
 
@@ -62,19 +62,19 @@ templates:
     - text: |
         Estou bem, obrigada. Em que posso te ajudar?
 
-        /cadastrar - Caso você deseje receber notificações sobre as novidades das Leis
-        /descadastrar - Para deixar de receber as notificações
-        /ajuda - Para entender como podemos interagir
-        /ultimas - Para saber sobre as últimas novidades de Leis
-        /sobrenos - Para conhecer um pouco mais sobre o nosso trabalho
-        /sugestao - Para me dizer uma sugestão
-        (você também pode me informar o número de tramitações que quer ver. Como neste exemplo: /ultimas 5).
+        #cadastrar - Caso você deseje receber notificações sobre as novidades das Leis
+        #descadastrar - Para deixar de receber as notificações
+        #ajuda - Para entender como podemos interagir
+        #ultimas - Para saber sobre as últimas novidades de Leis
+        (você também pode me informar o número de tramitações que quer ver. Como neste exemplo: #ultimas 5).
+        #sobrenos - Para conhecer um pouco mais sobre o nosso trabalho
+        #sugestao - Para me dizer uma sugestão
 
   utter_sugestao:
     - text: |
         Eu ainda estou em fase de testes e estou aprendendo com vocês, se você tem alguma sugestão de conteúdo 
         me envia nesse email: contato@prioridadeabsoluta.org.br
-        Se você deseja voltar ao menu digite: /voltarmenu
+        Se você deseja voltar ao menu digite: #voltarmenu
 
   utter_ajuda:
     - text: |
@@ -83,18 +83,18 @@ templates:
 
         E, posso te enviar as novidades que estão ocorrendo nas proposições de leis para Crianças e Adolescentes.
         Todas que forem relevantes!
-        Você pode escolher o número de tramitações que deseja ver da seguinte forma: /ultimas 4.
+        Você pode escolher o número de tramitações que deseja ver da seguinte forma: #ultimas 4.
 
         Posso também te falar um pouco do nosso trabalho na opção /sobrenos.
-        Você pode me dizer uma sugestão escolhendo a opção /sugestao
+        Você pode me dizer uma sugestão escolhendo a opção #sugestao
         
 
         Como posso te ajudar?
-        /cadastrar
-        /descadastrar
-        /sobrenos
-        /ultimas
-        /sugestao
+        #cadastrar
+        #descadastrar
+        #sobrenos
+        #ultimas
+        #sugestao
 
   utter_sobre_nos:
     - text: |
@@ -102,8 +102,7 @@ templates:
         ao Artigo 227 da Constituição Federal do Brasil, que estabelece os direitos e o melhor interesse de crianças 
         e adolescentes como absoluta prioridade das famílias, da sociedade e do Estado. 
         Para conhecer mais acesse o nosso siste: https://prioridadeabsoluta.org.br/.
-        Se você deseja voltar para o menu digite: /voltarmenu
-        Para me dar uma sugestão digite: /sugestao
+        Se você deseja voltar para o menu digite: #voltarmenu
 
   utter_despedir:
     - text: |

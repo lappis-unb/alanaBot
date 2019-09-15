@@ -49,10 +49,10 @@
 - quero ir para o menu
 - quero voltar
 - voltar menu
-- /voltarmenu
+- #voltarmenu
 - volta menu
-- /voltamenu
-- /voltar
+- #voltamenu
+- #voltar
 - voltar
 - menu
 
@@ -159,7 +159,8 @@
 - voce podia falar sobre
 - você precisa melhorar
 - vc precisa melhorar
-- /sugestao
+- #sugestao
+- #sugestão
 - sugestão
 - sugestao
 - email
@@ -175,11 +176,10 @@
 - prioridade absoluta
 - iniciativa alana
 - que ong é essa
-- /sobre nós
-- /sobre nos
-- /sobrenós
-- /sobrenos
+- #sobre nós
+- #sobre nos
+- #sobrenós
+- #sobrenos
 - sobre nós
 - sobre nos
 - sobrenos
-- ong
