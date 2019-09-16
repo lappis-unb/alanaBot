@@ -1,10 +1,12 @@
 ## intent:action_cadastro
 - [cadastrar](command)
 - [/cadastrar](command)
+- [#cadastrar](command)
 
 ## intent:action_descadastro
 - [descadastrar](command)
 - [/descadastrar](command)
+- [#descadastrar](command)
 
 ## intent:action_start
 - [start](command)

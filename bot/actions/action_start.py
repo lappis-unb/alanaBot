@@ -17,28 +17,36 @@ class ActionStart(Action):
             db = client["bot"]
             user_data = self.build_user_data(sender_id)
             self.save_telegram_user(user_data, db)
-            dispatcher.utter_message(
-                "Olá! Esse bot envia atualizações na tramitação "
-                "de proposições legislativas relevantes para "
-                "infâncias e adolescências brasileiras."
-            )
-            dispatcher.utter_message(
-                "Esta é a versão beta, logo teremos mais "
-                "funcionalidades e comandos implementados. "
-                "Se você tem sugestões, também pode entrar "
-                "em contato pelo email contato@prioridadeabsoluta.org.br"
-            )
-            dispatcher.utter_message(
-                "Use os seguintes comandos para interagir com o bot:"
-            )
-            dispatcher.utter_message(
-                "/cadastrar - Para passar a receber notificações.\n"
-                "/descadastrar - Para deixar de receber notificações.\n"
-                "/ajuda - Para mostrar esse texto.\n"
-                "/ultimas - Para mostrar últimas tramitações (você pode, "
-                "se quiser, informar o número de tramitações que quer ver. "
-                "Por exemplo: /ultimas 5)."
-            )
+            dispatcher.utter_message("Oi, eu sou a Alana, a Assistente "
+                                     "Virtual do programa Prioridade "
+                                     "Absoluta. Estou aqui para te "
+                                     "informar sobre as novidades "
+                                     "das proposições de Leis para "
+                                     "Crianças e Adolescentes. Afinal, "
+                                     "cuidar das crianças e dos "
+                                     "adolescentes, é cuidar de todos nós!")
+
+            dispatcher.utter_message("Para conversar comigo basta escolher "
+                                     "qual opção você prefere no momento:")
+
+            dispatcher.utter_message("#cadastrar - Caso você deseje "
+                                     "receber notificações sobre as "
+                                     "novidades das Leis\n"
+                                     "#descadastrar - Para deixar de "
+                                     "receber as notificações\n"
+                                     "#ajuda - Para entender como "
+                                     "podemos interagir\n"
+                                     "#ultimas - Para saber sobre "
+                                     "as últimas novidades de Leis\n"
+                                     "(você também pode me informar "
+                                     "o número de tramitações que quer "
+                                     "ver. Como neste exemplo: #ultimas 5)\n"
+                                     "#sobrenos - Para conhecer um pouco "
+                                     "mais sobre o nosso trabalho\n"
+                                     "#sugestao - Para me dizer "
+                                     "uma sugestão\n")
+
+            dispatcher.utter_message("O que você deseja?")
         except ValueError:
             dispatcher.utter_message(ValueError)
         return []

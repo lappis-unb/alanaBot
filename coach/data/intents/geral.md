@@ -165,6 +165,11 @@
 - sugestao
 - email
 
+## intent:requisicao_ultimas
+- [ultimas](command) [2](pl_number)
+- [/ultimas](command) [3](pl_number)
+
+
 ## intent:sobre_nos
 - que tipo de trabalho vocês desenvolvem
 - me fala sobre a ong que você trabalha
