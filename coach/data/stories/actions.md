@@ -11,5 +11,5 @@
     - utter_cumprimentar
 
 ## action_ultimas
-* ultimas
+* requisicao_ultimas
     - action_ultimas

@@ -8,6 +8,7 @@ intents:
   - cadastrar
   - descadastrar
   - requisicao_ultimas
+  - ultimas
   - start
   - action_descadastro
   - action_cadastro
@@ -51,8 +52,7 @@ templates:
         #cadastrar - Caso você deseje receber notificações sobre as novidades das Leis
         #descadastrar - Para deixar de receber as notificações
         #ajuda - Para entender como podemos interagir
-        #ultimas - Para saber sobre as últimas novidades de Leis
-        (você também pode me informar o número de tramitações que quer ver. Como neste exemplo: #ultimas 5)
+        #novidades - Para saber sobre as últimas novidades de Leis
         #sobrenos - Para conhecer um pouco mais sobre o nosso trabalho
         #sugestao - Para me dizer uma sugestão
 
@@ -65,8 +65,7 @@ templates:
         #cadastrar - Caso você deseje receber notificações sobre as novidades das Leis
         #descadastrar - Para deixar de receber as notificações
         #ajuda - Para entender como podemos interagir
-        #ultimas - Para saber sobre as últimas novidades de Leis
-        (você também pode me informar o número de tramitações que quer ver. Como neste exemplo: #ultimas 5).
+        #novidades - Para saber sobre as últimas novidades de Leis
         #sobrenos - Para conhecer um pouco mais sobre o nosso trabalho
         #sugestao - Para me dizer uma sugestão
 
@@ -83,7 +82,6 @@ templates:
 
         E, posso te enviar as novidades que estão ocorrendo nas proposições de leis para Crianças e Adolescentes.
         Todas que forem relevantes!
-        Você pode escolher o número de tramitações que deseja ver da seguinte forma: #ultimas 4.
 
         Posso também te falar um pouco do nosso trabalho na opção /sobrenos.
         Você pode me dizer uma sugestão escolhendo a opção #sugestao
@@ -93,7 +91,7 @@ templates:
         #cadastrar
         #descadastrar
         #sobrenos
-        #ultimas
+        #novidades
         #sugestao
 
   utter_sobre_nos:
@@ -101,8 +99,29 @@ templates:
         O Prioridade Absoluta é um programa do Instituto Alana criado com a missão de dar efetividade e visibilidade 
         ao Artigo 227 da Constituição Federal do Brasil, que estabelece os direitos e o melhor interesse de crianças 
         e adolescentes como absoluta prioridade das famílias, da sociedade e do Estado. 
-        Para conhecer mais acesse o nosso siste: https://prioridadeabsoluta.org.br/.
+        Para conhecer mais acesse o nosso site: https://prioridadeabsoluta.org.br/.
         Se você deseja voltar para o menu digite: #voltarmenu
+
+  utter_ultimas:
+    - text: |
+        Ah, que bom que você está interessando em ver as novidades de Leis para Crianças e Adolescentes.
+        Para que eu te envie as últimas tramitações. Preciso que você escreva #ultimas e ao final coloque 
+        a quantidade de tramitações que você deseja ler. Exemplo: #ultimas2 
+
+  utter_menu:
+    - text: |
+        O que você deseja?
+
+        #cadastrar
+        #descadastrar
+        #sobrenos
+        #novidades
+        #sugestao
+
+  utter_notificacao:
+    - text: |
+        Estou muito animada com as novas atualizações!
+        Observe que uma sociedade em que o interesse da criança é prioridade, é um lugar melhor para todos :)
 
   utter_despedir:
     - text: |
@@ -118,6 +137,9 @@ actions:
   - utter_sugestao
   - utter_despedir
   - utter_sobre_nos
+  - utter_ultimas
+  - utter_notificacao
+  - utter_menu
 
   - action_start
   - action_descadastro
