@@ -188,3 +188,26 @@
 - sobre nós
 - sobre nos
 - sobrenos
+
+## intent: ultimas
+- quero ler as últimas novidades
+- quero ler as ultimas novidades
+- quero ler as últimas tramitações
+- quero ler as ultimas tramitacoes
+- quero receber as ultimas tramitacoes
+- ultimas tramitacoes
+- últimas tramitações
+- tramitações
+- tramitacoes
+- #ultimas1
+- #últimas1
+- #ultimas2
+- #últimas2
+- #ultimas3
+- #últimas3
+- #ultimas4
+- #últimas4
+- #ultimas5
+- #últimas5
+- #ultimas
+- #últimas

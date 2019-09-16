@@ -30,17 +30,17 @@
 
 ## path_menu
 * menu_voltar
-  - utter_ajuda
+  - utter_menu
 
 ## path_menu+sobre_nos
 * menu_voltar
-  - utter_ajuda
+  - utter_menu
 * sobre_nos
   - utter_sobre_nos
 
 ## path_menu+sugestao
 * menu_voltar
-  - utter_ajuda
+  - utter_menu
 * sugestao
   - utter_sugestao
 
@@ -78,4 +78,11 @@
 * sugestao
   - utter_sugestao
 * menu_voltar
-  - utter_ajuda
+  - utter_menu
+
+## path_ultimas
+* requisicao_ultimas
+  - action_ultimas
+* ultimas
+  - utter_ultimas
+  - utter_notificacao
