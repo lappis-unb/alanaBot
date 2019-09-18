@@ -1,23 +1,31 @@
 ## action_cadastro
 * cadastrar
-    - action_cadastro
+  - action_cadastro
 
 ## action_descadastro
 * descadastrar
-    - action_descadastro
+  - action_descadastro
 
 ## action_start
 * start
-    - action_start
+  - action_start
+
+## action_start+sugestao
+* start
+  - action_start
+* sugestao
+  - utter_sugestao
 
 ## action_ultimas
 * ultimas
+  - utter_notificacao
   - action_ultimas
 
 ## novidades+action_ultimas
 * novidades
   - utter_novidades
 * ultimas
+  - utter_notificacao
   - action_ultimas
 
 ## action_start+action_cadastro
@@ -34,12 +42,14 @@
 
 ## path_ultimas+sugestao
 * ultimas
+  - utter_notificacao
   - action_ultimas
 * sugestao
   - utter_sugestao
 
 ## path_ultimas+sobrenos
 * ultimas
+  - utter_notificacao
   - action_ultimas
 * sobrenos
   - utter_sobrenos

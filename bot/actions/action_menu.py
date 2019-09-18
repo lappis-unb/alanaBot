@@ -31,9 +31,14 @@ class ActionMenu(Action):
         commands = ['#cadastrar', '#descadastrar',
                     '#sobrenos', '#novidades', '#sugestao']
         for cmd in commands:
-            buttons.append(telegram.InlineKeyboardButton(
-                            text=cmd.replace('#', ''),
-                            callback_data=cmd))
+            if cmd == '#sobrenos':
+                buttons.append(telegram.InlineKeyboardButton(
+                                text='sobre nos',
+                                callback_data=cmd))
+            else:
+                buttons.append(telegram.InlineKeyboardButton(
+                                text=cmd.replace('#', ''),
+                                callback_data=cmd))
         cmd_menu = [buttons[i:i+2] for i in range(0, len(buttons), 2)]
         reply_markup = telegram.InlineKeyboardMarkup(cmd_menu)
         return reply_markup

@@ -3,7 +3,9 @@ intents:
   - ajuda
   - tudo_bem
   - menu_voltar
-  - sugestoes
+  - sugestao
+  - cumprimentar
+  - despedir
   - sobrenos
   - cadastrar
   - descadastrar

@@ -42,6 +42,14 @@
   - utter_ajuda
   - action_menu
 
+## path_ajuda+sugestao
+* ajuda
+  - utter_ajuda
+  - action_menu
+* sugestao
+  - utter_sugestao
+
+
 ## path_menu
 * menu_voltar
   - action_menu
