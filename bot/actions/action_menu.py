@@ -29,7 +29,7 @@ class ActionMenu(Action):
     def build_menu(self, sender_id):
         buttons = []
         commands = ['#cadastrar', '#descadastrar',
-                    '#sobre_nos', '#novidades', '#sugestao']
+                    '#sobrenos', '#novidades', '#sugestao']
         for cmd in commands:
             buttons.append(telegram.InlineKeyboardButton(
                             text=cmd.replace('#', ''),

@@ -62,11 +62,11 @@ templates:
 
   utter_ajuda:
     - text: |
-        Eu posso te enviar atualizações sobre as leis. Para isso posso te cadastrar, caso você escolha a opção /cadastrar.
-        Posso te /descadastrar, se você não quiser mais receber as minhas notificações.
+        Eu posso te enviar atualizações sobre as leis. Para isso posso te cadastrar, caso você escolha a opção #cadastrar.
+        Posso te #descadastrar, se você não quiser mais receber as minhas notificações.
         E, posso te enviar as novidades que estão ocorrendo nas proposições de leis para Crianças e Adolescentes.
         Todas que forem relevantes!
-        Posso também te falar um pouco do nosso trabalho na opção /sobrenos.
+        Posso também te falar um pouco do nosso trabalho na opção #sobrenos.
         Você pode me dizer uma sugestão escolhendo a opção #sugestao
 
   utter_sobrenos:
