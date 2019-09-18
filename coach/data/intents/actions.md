@@ -36,6 +36,6 @@
 - boa tarde
 - boa noite
 
-## intent:action_ultimas
-- ultimas [1](pl_number)
-- /ultimas [2](pl_number)
+## intent:ultimas
+- #ultimas 2
+- #ultimas 6

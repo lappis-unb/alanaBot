@@ -206,3 +206,4 @@ export.sh
 *.env
 outputs/
 .vscode/
+client_secret.json

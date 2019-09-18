@@ -4,16 +4,18 @@ intents:
   - tudo_bem
   - menu_voltar
   - sugestoes
-  - sobre_nos
+  - sobrenos
   - cadastrar
   - descadastrar
-  - requisicao_ultimas
-  - ultimas
+  - novidades
   - start
+  - ultimas
+
   - action_descadastro
   - action_cadastro
   - action_start
   - action_ultimas
+  - action_menu
 
 entities:
   - command
@@ -22,7 +24,7 @@ entities:
 slots:
   ultimas:
     type: text
-  pl_numbers:
+  pl_number:
     type: text
 
 
@@ -40,23 +42,6 @@ templates:
 
     - text: |
         Vamos tentar mais uma vez? Eu não consegui te entender direito, me pergunta de outro jeito?
-
-  utter_cumprimentar:
-    - text: |
-        Oi, eu sou a Alana, a Assistente Virtual do programa Prioridade Absoluta.
-        Estou aqui para te informar sobre as novidades das proposições de Leis para Crianças e Adolescentes.
-        Afinal, cuidar das crianças e dos adolescentes, é cuidar de todos nós!
-
-        Para conversar comigo basta escolher qual opção você prefere no momento:
-
-        #cadastrar - Caso você deseje receber notificações sobre as novidades das Leis
-        #descadastrar - Para deixar de receber as notificações
-        #ajuda - Para entender como podemos interagir
-        #novidades - Para saber sobre as últimas novidades de Leis
-        #sobrenos - Para conhecer um pouco mais sobre o nosso trabalho
-        #sugestao - Para me dizer uma sugestão
-
-        O que você deseja?
 
   utter_tudo_bem:
     - text: |
@@ -79,22 +64,12 @@ templates:
     - text: |
         Eu posso te enviar atualizações sobre as leis. Para isso posso te cadastrar, caso você escolha a opção /cadastrar.
         Posso te /descadastrar, se você não quiser mais receber as minhas notificações.
-
         E, posso te enviar as novidades que estão ocorrendo nas proposições de leis para Crianças e Adolescentes.
         Todas que forem relevantes!
-
         Posso também te falar um pouco do nosso trabalho na opção /sobrenos.
         Você pode me dizer uma sugestão escolhendo a opção #sugestao
-        
 
-        Como posso te ajudar?
-        #cadastrar
-        #descadastrar
-        #sobrenos
-        #novidades
-        #sugestao
-
-  utter_sobre_nos:
+  utter_sobrenos:
     - text: |
         O Prioridade Absoluta é um programa do Instituto Alana criado com a missão de dar efetividade e visibilidade 
         ao Artigo 227 da Constituição Federal do Brasil, que estabelece os direitos e o melhor interesse de crianças 
@@ -102,21 +77,11 @@ templates:
         Para conhecer mais acesse o nosso site: https://prioridadeabsoluta.org.br/.
         Se você deseja voltar para o menu digite: #voltarmenu
 
-  utter_ultimas:
+  utter_novidades:
     - text: |
         Ah, que bom que você está interessando em ver as novidades de Leis para Crianças e Adolescentes.
         Para que eu te envie as últimas tramitações. Preciso que você escreva #ultimas e ao final coloque 
-        a quantidade de tramitações que você deseja ler. Exemplo: #ultimas2 
-
-  utter_menu:
-    - text: |
-        O que você deseja?
-
-        #cadastrar
-        #descadastrar
-        #sobrenos
-        #novidades
-        #sugestao
+        a quantidade de tramitações que você deseja ler. Exemplo: #ultimas 2 
 
   utter_notificacao:
     - text: |
@@ -136,12 +101,12 @@ actions:
   - utter_tudo_bem
   - utter_sugestao
   - utter_despedir
-  - utter_sobre_nos
-  - utter_ultimas
+  - utter_sobrenos
+  - utter_novidades
   - utter_notificacao
-  - utter_menu
 
   - action_start
   - action_descadastro
   - action_cadastro
   - action_ultimas
+  - action_menu

@@ -1,3 +1,5 @@
 requests==2.22.0
 pymongo==3.8.0
 python-telegram-bot==11.1.0
+gspread==3.1.0
+oauth2client==4.1.3

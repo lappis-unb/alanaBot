@@ -2,23 +2,36 @@
 * cumprimentar
     - utter_cumprimentar
 
-## path_cumprimentar+sobre_nos
+## path_cumprimentar+sobrenos
 * cumprimentar
   - utter_cumprimentar
-* sobre_nos
-  - utter_sobre_nos
+* sobrenos
+  - utter_sobrenos
 
 ## path_cumprimentar+ajuda
 * cumprimentar
   - utter_cumprimentar
 * ajuda
   - utter_ajuda
+  - action_menu
 
 ## path_cumprimentar+sugestao
 * cumprimentar
   - utter_cumprimentar
 * sugestao
   - utter_sugestao
+
+## path_cumprimentar+cadastrar
+* cumprimentar
+  - utter_cumprimentar
+* cadastrar
+  - action_cadastro
+
+## path_cumprimentar+descadastrar
+* cumprimentar
+  - utter_cumprimentar
+* descadastrar
+  - action_descadastro
 
 ## fallback
 * out_of_scope
@@ -27,20 +40,21 @@
 ## path_ajuda
 * ajuda
   - utter_ajuda
+  - action_menu
 
 ## path_menu
 * menu_voltar
-  - utter_menu
+  - action_menu
 
-## path_menu+sobre_nos
+## path_menu+sobrenos
 * menu_voltar
-  - utter_menu
-* sobre_nos
-  - utter_sobre_nos
+  - action_menu
+* sobrenos
+  - utter_sobrenos
 
 ## path_menu+sugestao
 * menu_voltar
-  - utter_menu
+  - action_menu
 * sugestao
   - utter_sugestao
 
@@ -55,20 +69,21 @@
 ## path_tudo_bem
 * tudo_bem
   -  utter_tudo_bem
-* sobre_nos
-  - utter_sobre_nos
+* sobrenos
+  - utter_sobrenos
 
-## path_tudo_bem+sobre_nos
+## path_tudo_bem+sobrenos
 * tudo_bem
   -  utter_tudo_bem
-* sobre_nos
-  - utter_sobre_nos
+* sobrenos
+  - utter_sobrenos
 
 ## path_tudo_bem+ajuda
 * tudo_bem
   -  utter_tudo_bem
 * ajuda
   - utter_ajuda
+  - action_menu
 
 ## path_sugestao
 * sugestao
@@ -78,11 +93,8 @@
 * sugestao
   - utter_sugestao
 * menu_voltar
-  - utter_menu
+  - action_menu
 
-## path_ultimas
-* requisicao_ultimas
-  - action_ultimas
-* ultimas
-  - utter_ultimas
-  - utter_notificacao
+## path_novidades
+* novidades
+  - utter_novidades

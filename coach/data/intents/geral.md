@@ -1,4 +1,4 @@
-## intent: cumprimentar
+## intent:cumprimentar
 - oi
 - hi
 - olá
@@ -43,15 +43,17 @@
 - td bem
 - tá bem
 
-## intent: menu_voltar
+## intent:menu_voltar
 - quero voltar para o menu
 - preciso voltar ao menu
 - quero ir para o menu
 - quero voltar
 - voltar menu
 - #voltarmenu
+- /voltarmenu
 - volta menu
 - #voltamenu
+- /voltamenu
 - #voltar
 - voltar
 - menu
@@ -65,6 +67,7 @@
 
 ## intent:ajuda
 - [ajuda](command)
+- [#ajuda](command)
 - [/ajuda](command)
 - voce pode me ajudar
 - você pode me ajudar
@@ -90,6 +93,7 @@
 
 ## intent:cadastrar
 - [cadastrar](command)
+- [#cadastrar](command)
 - [/cadastrar](command)
 - quero receber notificações de pls
 - quero me cadastrar, por favor
@@ -116,6 +120,7 @@
 
 ## intent:descadastrar
 - [descadastrar](command)
+- [#descadastrar](command)
 - [/descadastrar](command)
 - para de me mandar notificações
 - para de me mandar notificações de pls
@@ -159,18 +164,13 @@
 - voce podia falar sobre
 - você precisa melhorar
 - vc precisa melhorar
-- #sugestao
+- /sugestao
 - #sugestão
 - sugestão
 - sugestao
 - email
 
-## intent:requisicao_ultimas
-- [ultimas](command) [2](pl_number)
-- [/ultimas](command) [3](pl_number)
-
-
-## intent:sobre_nos
+## intent:sobrenos
 - que tipo de trabalho vocês desenvolvem
 - me fala sobre a ong que você trabalha
 - me fala sobre o projeto de vocês
@@ -185,11 +185,16 @@
 - #sobre nos
 - #sobrenós
 - #sobrenos
+- /sobrenos
 - sobre nós
 - sobre nos
 - sobrenos
 
-## intent: ultimas
+
+## intent:novidades
+- [novidades](command)
+- [#novidades](command)
+- [/novidades](command)
 - quero ler as últimas novidades
 - quero ler as ultimas novidades
 - quero ler as últimas tramitações
@@ -199,15 +204,3 @@
 - últimas tramitações
 - tramitações
 - tramitacoes
-- #ultimas1
-- #últimas1
-- #ultimas2
-- #últimas2
-- #ultimas3
-- #últimas3
-- #ultimas4
-- #últimas4
-- #ultimas5
-- #últimas5
-- #ultimas
-- #últimas

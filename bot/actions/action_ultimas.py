@@ -2,6 +2,7 @@ from rasa_core_sdk import Action
 from pymongo import MongoClient, DESCENDING
 from .constants import TELEGRAM_DB_URI, TELEGRAM_TOKEN
 import telegram
+from rasa_core_sdk.events import SlotSet
 
 
 class ActionUltimas(Action):
@@ -19,7 +20,7 @@ class ActionUltimas(Action):
             bot = telegram.Bot(token=TELEGRAM_TOKEN)
             projects = self.get_all_projects(db, int(message[-1]))
             for project in projects:
-                message = (
+                msg = (
                     "*{data}*\n"
                     "[{sigla} {numero}/{ano}]({url_pl})\n"
                     "_Ementa_: {ementa}\n"
@@ -35,13 +36,13 @@ class ActionUltimas(Action):
                 )
                 bot.send_message(
                     chat_id=sender_id,
-                    text=message,
+                    text=msg,
                     parse_mode=telegram.ParseMode.MARKDOWN,
                     disable_web_page_preview=True,
                 )
         except ValueError:
             dispatcher.utter_message(ValueError)
-        return []
+        return [SlotSet('pl_number', int(message[-1]))]
 
     def get_all_projects(self, db, number_of_projects):
         projects_to_send = []

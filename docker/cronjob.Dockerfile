@@ -26,6 +26,7 @@ RUN dpkg-reconfigure -f noninteractive tzdata
 
 
 ADD ./example-palavras-chaves.json /cronjob/palavras-chaves.json
+ADD ./client_secret.json /cronjob/client_secret.json
 
 # ADD ./.env /cronjob/.env
 
