@@ -7,6 +7,7 @@
   - utter_cumprimentar
 * sobrenos
   - utter_sobrenos
+  - action_voltar_menu
 
 ## path_cumprimentar+ajuda
 * cumprimentar
@@ -20,6 +21,7 @@
   - utter_cumprimentar
 * sugestao
   - utter_sugestao
+  - action_voltar_menu
 
 ## path_cumprimentar+cadastrar
 * cumprimentar
@@ -48,7 +50,7 @@
   - action_menu
 * sugestao
   - utter_sugestao
-
+  - action_voltar_menu
 
 ## path_menu
 * menu_voltar
@@ -59,12 +61,14 @@
   - action_menu
 * sobrenos
   - utter_sobrenos
+  - action_voltar_menu
 
 ## path_menu+sugestao
 * menu_voltar
   - action_menu
 * sugestao
   - utter_sugestao
+  - action_voltar_menu
 
 ## path_despedir
 * despedir
@@ -85,6 +89,7 @@
   -  utter_tudo_bem
 * sobrenos
   - utter_sobrenos
+  - action_voltar_menu
 
 ## path_tudo_bem+ajuda
 * tudo_bem
@@ -96,10 +101,12 @@
 ## path_sugestao
 * sugestao
   - utter_sugestao
+  - action_voltar_menu
 
 ## path_sugestao+menu
 * sugestao
   - utter_sugestao
+  - action_voltar_menu
 * menu_voltar
   - action_menu
 

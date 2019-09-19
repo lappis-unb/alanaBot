@@ -18,6 +18,7 @@ intents:
   - action_start
   - action_ultimas
   - action_menu
+  - action_voltar_menu
 
 entities:
   - command
@@ -60,7 +61,6 @@ templates:
     - text: |
         Eu ainda estou em fase de testes e estou aprendendo com vocês, se você tem alguma sugestão de conteúdo 
         me envia nesse email: contato@prioridadeabsoluta.org.br
-        Se você deseja voltar ao menu digite: #voltarmenu
 
   utter_ajuda:
     - text: |
@@ -77,7 +77,6 @@ templates:
         ao Artigo 227 da Constituição Federal do Brasil, que estabelece os direitos e o melhor interesse de crianças 
         e adolescentes como absoluta prioridade das famílias, da sociedade e do Estado. 
         Para conhecer mais acesse o nosso site: https://prioridadeabsoluta.org.br/.
-        Se você deseja voltar para o menu digite: #voltarmenu
 
   utter_novidades:
     - text: |
@@ -112,3 +111,4 @@ actions:
   - action_cadastro
   - action_ultimas
   - action_menu
+  - action_voltar_menu

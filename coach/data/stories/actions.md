@@ -15,11 +15,13 @@
   - action_start
 * sugestao
   - utter_sugestao
+  - action_voltar_menu
 
 ## action_ultimas
 * ultimas
   - utter_notificacao
   - action_ultimas
+  - action_voltar_menu
 
 ## novidades+action_ultimas
 * novidades
@@ -27,6 +29,7 @@
 * ultimas
   - utter_notificacao
   - action_ultimas
+  - action_voltar_menu
 
 ## action_start+action_cadastro
 * start
@@ -46,6 +49,7 @@
   - action_ultimas
 * sugestao
   - utter_sugestao
+  - action_voltar_menu
 
 ## path_ultimas+sobrenos
 * ultimas
@@ -53,3 +57,4 @@
   - action_ultimas
 * sobrenos
   - utter_sobrenos
+  - action_voltar_menu
