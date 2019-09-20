@@ -15,12 +15,19 @@ class UpdateProjetos:
             "/palavras-chaves.json"
         )
         self.URL_API_CAMARA = "https://dadosabertos.camara.leg.br/api/v2/"
-        self.QTY_DAYS = 3
+        self.QTY_DAYS = 1
         self.PL_ARQUIVADO = "Arquivada"
         self.URL_PLS_CAMARA = (
             "https://www.camara.leg.br/"
             "proposicoesWeb/fichadetramitacao"
             "?idProposicao={}"
+        )
+        self.URL_AUTORES_PL = (
+            "https://dadosabertos.camara.leg.br"
+            "/api/v2/proposicoes/{}/autores"
+        )
+        self.URL_DEPUTADOS_CAMARA = (
+            "https://www.camara.leg.br/deputados/{}"
         )
 
     def fetch_palavras_chaves(self):
@@ -142,6 +149,80 @@ class UpdateProjetos:
     def save_projeto_to_db(self, db_data, db):
         db.Project.insert_one(db_data)
 
+    def build_deputado_json(self, json_projeto):
+        url_autores_pl = (self.URL_AUTORES_PL.format(
+                          str(json_projeto["dados"]["id"])))
+        req_autores_pl = get(url_autores_pl)
+        json_autores_pl = req_autores_pl.json()
+        url_deputado = json_autores_pl["dados"][0]["uri"]
+        if not url_deputado:
+            dados_deputado = {
+                "autor": {
+                    "id": None,
+                    "nome": json_autores_pl["dados"][0]["nome"],
+                    "siglaPartido": None,
+                    "estado": None,
+                    "sexo": None
+                }
+            }
+            return dados_deputado
+        else:
+            req_deputado = get(url_deputado)
+            json_deputado = req_deputado.json()
+            dados_deputado = json_deputado["dados"]
+            dados_deputado = {
+                "autor": {
+                    "id": dados_deputado["id"],
+                    "nome": (dados_deputado["ultimoStatus"]
+                                           ["nome"].lower().title()),
+                    "urlApiDeputado": dados_deputado["ultimoStatus"]["uri"],
+                    "urlDeputado": (self.URL_DEPUTADOS_CAMARA
+                                        .format(dados_deputado['id'])),
+                    "siglaPartido": (dados_deputado["ultimoStatus"]
+                                                   ["siglaPartido"]),
+                    "urlPartido": dados_deputado["ultimoStatus"]["uriPartido"],
+                    "estado": dados_deputado["ultimoStatus"]["siglaUf"],
+                    "sexo": dados_deputado["sexo"]
+                }
+            }
+            return dados_deputado
+
+    def build_relator_json(self, json_projeto):
+        url_relator = (json_projeto["dados"]
+                                   ["statusProposicao"]
+                                   ["uriUltimoRelator"])
+        if url_relator:
+            req_deputado = get(url_relator)
+            json_deputado = req_deputado.json()
+            dados_deputado = json_deputado["dados"]
+            dados_deputado = {
+                "relator": {
+                    "id": dados_deputado["id"],
+                    "urlApiRelator": dados_deputado["ultimoStatus"]["uri"],
+                    "urlRelator": (self.URL_DEPUTADOS_CAMARA
+                                       .format(dados_deputado['id'])),
+                    "nome": (dados_deputado["ultimoStatus"]
+                                           ["nome"].lower().title()),
+                    "siglaPartido": (dados_deputado["ultimoStatus"]
+                                                   ["siglaPartido"]),
+                    "urlPartido": dados_deputado["ultimoStatus"]["uriPartido"],
+                    "estado": dados_deputado["ultimoStatus"]["siglaUf"],
+                    "sexo": dados_deputado["sexo"]
+                }
+            }
+            return dados_deputado
+        else:
+            dados_deputado = {
+                "relator": {
+                    "id": None,
+                    "nome": None,
+                    "siglaPartido": None,
+                    "estado": None,
+                    "sexo": None
+                }
+            }
+            return dados_deputado
+
     def build_projeto_dict(self, json_projeto):
         pl_date = datetime.datetime.strptime(
             json_projeto["dados"]
@@ -150,17 +231,27 @@ class UpdateProjetos:
         ).strftime("%d/%m/%Y")
         url_camara = (self.URL_PLS_CAMARA.format(
                       str(json_projeto["dados"]["id"])))
+        dados_deputado = self.build_deputado_json(json_projeto)
+        dados_relator = self.build_relator_json(json_projeto)
         db_data = {
             "ementa": json_projeto["dados"]["ementa"],
             "tramitacao": (json_projeto["dados"]
                                        ["statusProposicao"]
                                        ["despacho"]),
+            "situacao": (json_projeto["dados"]
+                                     ["statusProposicao"]
+                                     ["despacho"]),
             "sigla": json_projeto["dados"]["siglaTipo"],
             "numero": json_projeto["dados"]["numero"],
             "ano": json_projeto["dados"]["ano"],
             "data": pl_date,
             "urlPL": url_camara,
+            "regime": (json_projeto["dados"]
+                                   ["statusProposicao"]
+                                   ["regime"])
         }
+        db_data.update(dados_deputado)
+        db_data.update(dados_relator)
         return db_data
 
 
