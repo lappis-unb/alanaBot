@@ -3,7 +3,8 @@ import os
 variables = {
     "TELEGRAM_DB_URI": os.getenv("TELEGRAM_DB_URI", ""),
     "TELEGRAM_TOKEN": os.getenv("TELEGRAM_TOKEN", ""),
-    "SHEET_ID": os.getenv("SHEET_ID", "")
+    "SHEET_ID": os.getenv("SHEET_ID", ""),
+    "SHEET_TEMPLATE_ID": os.getenv("SHEET_TEMPLATE_ID", "")
 }
 
 with open("loaded-env.txt", "w") as f:

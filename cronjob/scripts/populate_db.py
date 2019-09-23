@@ -6,6 +6,7 @@ from datetime import date, timedelta
 from pymongo import MongoClient
 import os
 import datetime
+from bs4 import BeautifulSoup
 
 
 class UpdateProjetos:
@@ -238,6 +239,7 @@ class UpdateProjetos:
             "tramitacao": (json_projeto["dados"]
                                        ["statusProposicao"]
                                        ["despacho"]),
+            "apreciacao": self.crawl_apreciacao(json_projeto),
             "situacao": (json_projeto["dados"]
                                      ["statusProposicao"]
                                      ["despacho"]),
@@ -253,6 +255,16 @@ class UpdateProjetos:
         db_data.update(dados_deputado)
         db_data.update(dados_relator)
         return db_data
+
+    def crawl_apreciacao(self, json_projeto):
+        page = get(self.URL_PLS_CAMARA.format(
+                   str(json_projeto["dados"]["id"])))
+        soup = BeautifulSoup(page.text, 'html.parser')
+        div_apreciacao = soup.find("div", {"id": "informacoesDeTramitacao"})
+        paragraph_apreciacao = div_apreciacao.find('p')
+        paragraph_apreciacao.strong.decompose()
+        apreciacao = paragraph_apreciacao.text.strip()
+        return apreciacao
 
 
 if __name__ == "__main__":
