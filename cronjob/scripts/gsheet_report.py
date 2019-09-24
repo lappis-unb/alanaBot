@@ -105,7 +105,7 @@ class GoogleSheetsReport():
                         ),
                         today_pls[index]['relator']['siglaPartido'],
                         today_pls[index]['relator']['estado'],
-                        '-']
+                        today_pls[index]['apensados']]
         else:
             list_query = [hiperlynk_str.format(
                         url=today_pls[index]['urlPL'],
@@ -125,7 +125,7 @@ class GoogleSheetsReport():
                         today_pls[index]['relator']['nome'],
                         today_pls[index]['relator']['siglaPartido'],
                         today_pls[index]['relator']['estado'],
-                        '-']
+                        today_pls[index]['apensados']]
         for dict_key, db_query in zip(list(dict_query.keys()), list_query):
             dict_query[dict_key] = db_query
         return dict_query
@@ -163,6 +163,9 @@ class GoogleSheetsReport():
         header = sheet_data[0]
         for cell in header:
             col_formatting = self.get_col_formatting(template_sheet, cell)
+            print('#'*30)
+            print(col_formatting[0], '-------', col_formatting[1])
+            print('#'*30)
             first_row = col_formatting[0]
             col_coord = xl_cell_to_rowcol(first_row)
             time.sleep(2)

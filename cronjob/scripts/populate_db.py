@@ -30,6 +30,9 @@ class UpdateProjetos:
         self.URL_DEPUTADOS_CAMARA = (
             "https://www.camara.leg.br/deputados/{}"
         )
+        self.URL_APENSADOS_CAMARA = (
+            "https://www.camara.leg.br/proposicoesWeb/{}"
+        )
 
     def fetch_palavras_chaves(self):
         json_palavras_chaves = open(self.JSON_PALAVRAS_CHAVES,
@@ -250,7 +253,8 @@ class UpdateProjetos:
             "urlPL": url_camara,
             "regime": (json_projeto["dados"]
                                    ["statusProposicao"]
-                                   ["regime"])
+                                   ["regime"]),
+            "apensados": self.crawl_apensados(json_projeto)
         }
         db_data.update(dados_deputado)
         db_data.update(dados_relator)
@@ -265,6 +269,28 @@ class UpdateProjetos:
         paragraph_apreciacao.strong.decompose()
         apreciacao = paragraph_apreciacao.text.strip()
         return apreciacao
+
+    def crawl_apensados(self, json_projeto):
+        page = get(self.URL_PLS_CAMARA.format(
+                   str(json_projeto["dados"]["id"])))
+        soup = BeautifulSoup(page.text, 'html.parser')
+        try:
+            pls_apensados = []
+            div_apensada = soup.find("div", {"id": "divResumoApensados"})
+            paragraph_apensada = div_apensada.find('p')
+            pls_apensados.append(paragraph_apensada.find('strong').text)
+        except AttributeError:
+            div_apensada = soup.find("a", {"id": "lnkArvoreDeApensados"})
+            new_page = get(self.URL_APENSADOS_CAMARA.format(
+                           div_apensada.get('href')))
+            new_soup = BeautifulSoup(new_page.text, 'html.parser')
+            uls = new_soup.find("ul", {"class": "linkProposicao"})
+            lis = uls.find_all('li')
+            for li in lis:
+                lower_li = li.span.text.lower().strip()
+                if lower_li.startswith('pl'):
+                    pls_apensados.append(li.span.text)
+        return pls_apensados[0]
 
 
 if __name__ == "__main__":
