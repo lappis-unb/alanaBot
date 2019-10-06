@@ -4,6 +4,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from pymongo import MongoClient
 import os
 import time
+import datetime
 # import gspread_formatting
 import gspread_formatting as gs_formatting
 from xlsxwriter.utility import xl_rowcol_to_cell, xl_cell_to_rowcol
@@ -17,11 +18,6 @@ class GoogleSheetsReport():
         self.secret_file = (os.path.dirname(os.path.abspath(__file__))
                             + '/client_secret.json')
         self.sheet_id = sheet_id
-        self.header = {'Proposição': 1, 'Tramitação': 2, 'Apreciação': 3,
-                       'Situação': 4, 'Ementa': 5, 'Autor': 6,
-                       'Partido autor': 7, 'Estado autor': 8, 'Relator': 9,
-                       'Partido relator': 10, 'Estado relator': 11,
-                       'Apensados': 12}
 
     def connect_to_db(self):
         TELEGRAM_DB_URI = os.getenv("TELEGRAM_DB_URI", "")
@@ -46,7 +42,7 @@ class GoogleSheetsReport():
 
     def get_todays_pls(self, db):
         # today = datetime.date.today().strftime("%d/%m/%Y")
-        today = "18/09/2019"
+        today = "02/10/2019"
         projects = db["Project"]
         query = {"data": today}
         today_pls = projects.find(query)
@@ -80,61 +76,54 @@ class GoogleSheetsReport():
     def get_sheet_rows_num(self, sheet):
         return len(sheet.get_all_values())
 
-    def dict_query_db(self, today_pls, index):
-        dict_query = self.header
-        hiperlynk_str = '=HIPERLINK("{url}";"{value}")'
-        if today_pls[index]['relator']['id']:
-            list_query = [hiperlynk_str.format(
-                        url=today_pls[index]['urlPL'],
-                        value=today_pls[index]['sigla'] + ' ' +
-                        str(today_pls[index]['numero'])
-                        + '/' + str(today_pls[index]['ano'])),
-                        today_pls[index]['regime'],
-                        today_pls[index]['apreciacao'],
-                        today_pls[index]['situacao'],
-                        today_pls[index]['ementa'],
-                        hiperlynk_str.format(
-                        url=today_pls[index]['autor']['urlDeputado'],
-                        value=today_pls[index]['autor']['nome'],
-                        ),
-                        today_pls[index]['autor']['siglaPartido'],
-                        today_pls[index]['autor']['estado'],
-                        hiperlynk_str.format(
-                            url=today_pls[index]['relator']['urlRelator'],
-                            value=today_pls[index]['relator']['nome'],
-                        ),
-                        today_pls[index]['relator']['siglaPartido'],
-                        today_pls[index]['relator']['estado'],
-                        today_pls[index]['apensados']]
+    def format_hyperlink(self, url, value):
+        hyperlink_str = f'=HIPERLINK("{url}";"{value}")'
+        return hyperlink_str
+
+    def check_field_exists(self, url_field, field):
+        if url_field:
+            return self.format_hyperlink(
+                url_field,
+                field
+            )
         else:
-            list_query = [hiperlynk_str.format(
-                        url=today_pls[index]['urlPL'],
-                        value=today_pls[index]['sigla'] + ' ' +
-                        str(today_pls[index]['numero'])
-                        + '/' + str(today_pls[index]['ano'])),
-                        today_pls[index]['regime'],
-                        today_pls[index]['apreciacao'],
-                        today_pls[index]['situacao'],
-                        today_pls[index]['ementa'],
-                        hiperlynk_str.format(
-                        url=today_pls[index]['autor']['urlDeputado'],
-                        value=today_pls[index]['autor']['nome'],
-                        ),
-                        today_pls[index]['autor']['siglaPartido'],
-                        today_pls[index]['autor']['estado'],
-                        today_pls[index]['relator']['nome'],
-                        today_pls[index]['relator']['siglaPartido'],
-                        today_pls[index]['relator']['estado'],
-                        today_pls[index]['apensados']]
-        for dict_key, db_query in zip(list(dict_query.keys()), list_query):
-            dict_query[dict_key] = db_query
+            return field
+
+    def build_result(self, today_pls, index, header):
+        dict_query = dict.fromkeys(list(header.keys()), 0)
+        nome_relator = self.check_field_exists(
+            today_pls[index]['relator']['urlRelator'],
+            today_pls[index]['relator']['nome']
+        )
+        nome_autor = self.check_field_exists(
+            today_pls[index]['autor']['urlDeputado'],
+            today_pls[index]['autor']['nome']
+        )
+        dict_query = {
+            'Proposição': self.format_hyperlink(
+                            today_pls[index]['urlPL'],
+                            today_pls[index]['sigla'] + ' ' +
+                            str(today_pls[index]['numero'])
+                            + '/' + str(today_pls[index]['ano'])),
+            'Tramitação': today_pls[index]['regime'],
+            'Apreciação': today_pls[index]['apreciacao'],
+            'Situação': today_pls[index]['situacao'],
+            'Ementa': today_pls[index]['ementa'],
+            'Autor': nome_autor,
+            'Partido Autor': today_pls[index]['autor']['siglaPartido'],
+            'Estado Autor': today_pls[index]['autor']['estado'],
+            'Relator': nome_relator,
+            'Partido Relator': today_pls[index]['relator']['siglaPartido'],
+            ' Estado Relator': today_pls[index]['relator']['estado'],
+            'Apensados': today_pls[index]['apensados']
+        }
         return dict_query
 
     def write_pls_report(self, db, today_pls, rows_num,
-                         sheet, template_sheet):
+                         sheet, template_sheet, header):
         col = 1
         for i, _ in enumerate(today_pls):
-            query_results = self.dict_query_db(today_pls, i)
+            query_results = self.build_result(today_pls, i, header)
             for key in query_results:
                 sheet.update_cell(rows_num + 1 + i, col,
                                   query_results[key])
@@ -163,9 +152,6 @@ class GoogleSheetsReport():
         header = sheet_data[0]
         for cell in header:
             col_formatting = self.get_col_formatting(template_sheet, cell)
-            print('#'*30)
-            print(col_formatting[0], '-------', col_formatting[1])
-            print('#'*30)
             first_row = col_formatting[0]
             col_coord = xl_cell_to_rowcol(first_row)
             time.sleep(2)
@@ -173,6 +159,23 @@ class GoogleSheetsReport():
             gs_formatting.format_cell_range(sheet,
                                             first_row + ':' + last_row,
                                             col_formatting[1])
+
+    def conditional_format_sheet(self, sheet, template_sheet):
+        sheet_data = sheet.get_all_values()
+        del sheet_data[0]  # remove header
+        apreciacao_list = []
+        for row in sheet_data:
+            apreciacao_list.append(row[2])  # apreciação column
+
+        for row, cell in enumerate(apreciacao_list, start=1):
+            coord = xl_rowcol_to_cell(row, 2)
+            if 'plenário' in cell.lower():
+                cell_formatting = gs_formatting.get_effective_format(sheet,
+                                                                     coord)
+                cell_formatting.textFormat.foregroundColor = gs_formatting.color(1, 0, 0)
+                gs_formatting.format_cell_range(sheet,
+                                                coord + ':' + coord,
+                                                cell_formatting)
 
     def get_col_formatting(self, sheet, col_name):
         try:
@@ -185,22 +188,6 @@ class GoogleSheetsReport():
             return (cell_coordinate, col_formatting)
         except gspread.exceptions.CellNotFound as error:
             raise error
-
-
-# {
-#     "proposicao": "{sigla} + {numero}/{ano}",
-#     "tramitacao": "statusProposicao['regime']",
-#     "apreciacao": "pegar do site (forma de apreciacao)",
-#     "situacao": "despacho?",# atual tramitacao do banco
-#     "ementa": "dados['ementa']",
-#     "autor": "requisicao para a api,
-#     "partido": "segue o do autor",
-#     "estado": "segue o do autor",
-#     "relator": "fazer req com o link do campo de relator,
-#     "partido": "segue o do relator",
-#     "estado": "segue o do estado",
-#     "apensados": "pegar do site (apensados)"
-# }
 
 
 if __name__ == "__main__":
@@ -217,8 +204,9 @@ if __name__ == "__main__":
     sheet = gs.connect_sheet()
 
     header = gs.get_header_formatting(template_sheet)
-    rows_num = gs.get_sheet_rows_num(sheet)
 
     gs.write_header(sheet, header)
-    gs.write_pls_report(db, today_pls, rows_num + 1, sheet, template_sheet)
+    rows_num = gs.get_sheet_rows_num(sheet)
+    gs.write_pls_report(db, today_pls, rows_num, sheet, template_sheet, header)
     gs.format_sheet(sheet, template_sheet)
+    gs.conditional_format_sheet(sheet, template_sheet)

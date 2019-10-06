@@ -166,7 +166,8 @@ class UpdateProjetos:
                     "nome": json_autores_pl["dados"][0]["nome"],
                     "siglaPartido": None,
                     "estado": None,
-                    "sexo": None
+                    "sexo": None,
+                    "urlDeputado": None
                 }
             }
             return dados_deputado
@@ -222,7 +223,8 @@ class UpdateProjetos:
                     "nome": None,
                     "siglaPartido": None,
                     "estado": None,
-                    "sexo": None
+                    "sexo": None,
+                    "urlRelator": None
                 }
             }
             return dados_deputado
@@ -261,13 +263,16 @@ class UpdateProjetos:
         return db_data
 
     def crawl_apreciacao(self, json_projeto):
-        page = get(self.URL_PLS_CAMARA.format(
-                   str(json_projeto["dados"]["id"])))
-        soup = BeautifulSoup(page.text, 'html.parser')
-        div_apreciacao = soup.find("div", {"id": "informacoesDeTramitacao"})
-        paragraph_apreciacao = div_apreciacao.find('p')
-        paragraph_apreciacao.strong.decompose()
-        apreciacao = paragraph_apreciacao.text.strip()
+        try:
+            page = get(self.URL_PLS_CAMARA.format(
+                    str(json_projeto["dados"]["id"])))
+            soup = BeautifulSoup(page.text, 'html.parser')
+            div_apreciacao = soup.find("div", {"id": "informacoesDeTramitacao"})
+            paragraph_apreciacao = div_apreciacao.find('p')
+            paragraph_apreciacao.strong.decompose()
+            apreciacao = paragraph_apreciacao.text.strip()
+        except AttributeError:
+            apreciacao = None
         return apreciacao
 
     def crawl_apensados(self, json_projeto):
@@ -280,16 +285,19 @@ class UpdateProjetos:
             paragraph_apensada = div_apensada.find('p')
             pls_apensados.append(paragraph_apensada.find('strong').text)
         except AttributeError:
-            div_apensada = soup.find("a", {"id": "lnkArvoreDeApensados"})
-            new_page = get(self.URL_APENSADOS_CAMARA.format(
-                           div_apensada.get('href')))
-            new_soup = BeautifulSoup(new_page.text, 'html.parser')
-            uls = new_soup.find("ul", {"class": "linkProposicao"})
-            lis = uls.find_all('li')
-            for li in lis:
-                lower_li = li.span.text.lower().strip()
-                if lower_li.startswith('pl'):
-                    pls_apensados.append(li.span.text)
+            try:
+                div_apensada = soup.find("a", {"id": "lnkArvoreDeApensados"})
+                new_page = get(self.URL_APENSADOS_CAMARA.format(
+                            div_apensada.get('href')))
+                new_soup = BeautifulSoup(new_page.text, 'html.parser')
+                uls = new_soup.find("ul", {"class": "linkProposicao"})
+                lis = uls.find_all('li')
+                for li in lis:
+                    lower_li = li.span.text.lower().strip()
+                    if lower_li.startswith('pl'):
+                        pls_apensados.append(li.span.text)
+            except AttributeError:
+                return None
         return pls_apensados[0]
 
 
