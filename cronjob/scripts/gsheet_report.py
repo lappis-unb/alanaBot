@@ -1,13 +1,13 @@
 import gspread
 import logging
 from oauth2client.service_account import ServiceAccountCredentials
-from pymongo import MongoClient
 import os
 import time
 import datetime
 # import gspread_formatting
 import gspread_formatting as gs_formatting
 from xlsxwriter.utility import xl_rowcol_to_cell, xl_cell_to_rowcol
+import constants
 
 
 logger = logging.getLogger(__name__)
@@ -18,12 +18,7 @@ class GoogleSheetsReport():
         self.secret_file = (os.path.dirname(os.path.abspath(__file__))
                             + '/client_secret.json')
         self.sheet_id = sheet_id
-
-    def connect_to_db(self):
-        TELEGRAM_DB_URI = os.getenv("TELEGRAM_DB_URI", "")
-        client = MongoClient(TELEGRAM_DB_URI)
-        db = client["bot"]
-        return db
+        self.DB = constants.DB
 
     def connect_sheet(self):
         scope = ['https://www.googleapis.com/auth/spreadsheets']
@@ -40,10 +35,10 @@ class GoogleSheetsReport():
             logger.error(ValueError)
         return sheet
 
-    def get_todays_pls(self, db):
-        # today = datetime.date.today().strftime("%d/%m/%Y")
-        today = "02/10/2019"
-        projects = db["Project"]
+    def get_todays_pls(self):
+        today = datetime.date.today().strftime("%d/%m/%Y")
+        # today = "02/10/2019"
+        projects = self.DB["Project"]
         query = {"data": today}
         today_pls = projects.find(query)
         pls_list = []
@@ -119,30 +114,47 @@ class GoogleSheetsReport():
         }
         return dict_query
 
-    def write_pls_report(self, db, today_pls, rows_num,
-                         sheet, template_sheet, header):
+    def write_pls_report(self, today_pls, rows_num,
+                         sheet, template_sheet, template_header):
         col = 1
         for i, _ in enumerate(today_pls):
-            query_results = self.build_result(today_pls, i, header)
+            query_results = self.build_result(today_pls, i, template_header)
             for key in query_results:
-                sheet.update_cell(rows_num + 1 + i, col,
+                row = self.get_sheet_pls(sheet, i, today_pls,
+                                         template_header)
+                sheet.update_cell(row, col,
                                   query_results[key])
                 time.sleep(2)  # sleep to avoid sheets api request limit
                 col += 1
             col = 1
 
-    def get_header_formatting(self, sheet):
-        if self.header_exists(sheet):
-            sheet_data = sheet.get_all_values()
-            header_formatting = {}
-            for i, cell in enumerate(sheet_data[0], start=1):
-                cell_coordinate = xl_rowcol_to_cell(0, i - 1)
-                header_formatting[cell] = {
+    def get_sheet_pls(self, sheet, index, today_pls, template_header):
+        sheet_pls = self.get_column_values(sheet, 'Proposição',
+                                           template_header)
+        try:
+            row = sheet_pls.index(today_pls[index]['sigla'] + ' ' +
+                                  str(today_pls[index]['numero'])
+                                  + '/' + str(today_pls[index]['ano']))
+            # 2 because gspread start indexing at 1 and the header row
+            # was removed in the get column values method
+            return row + 2
+        except ValueError:
+            row = rows_num + 1 + index
+            return row
+
+    def get_template_header_formatting(self, template_sheet):
+        if self.header_exists(template_sheet):
+            sheet_data = template_sheet.get_all_values()
+            template_header_formatting = {}
+            for template_sheet_col, cell in enumerate(sheet_data[0], start=0):
+                cell_coordinate = xl_rowcol_to_cell(0, template_sheet_col)
+                template_header_formatting[cell] = {
                     'coord': cell_coordinate,
                     'formatting': gs_formatting.
-                    get_effective_format(sheet, cell_coordinate)
+                    get_effective_format(template_sheet, cell_coordinate),
+                    'column_index': template_sheet_col
                 }
-            return header_formatting
+            return template_header_formatting
         else:
             return False
 
@@ -160,19 +172,25 @@ class GoogleSheetsReport():
                                             first_row + ':' + last_row,
                                             col_formatting[1])
 
-    def conditional_format_sheet(self, sheet, template_sheet):
+    def get_column_values(self, sheet, column_name, template_header):
         sheet_data = sheet.get_all_values()
-        del sheet_data[0]  # remove header
-        apreciacao_list = []
+        column_values = []
         for row in sheet_data:
-            apreciacao_list.append(row[2])  # apreciação column
+            column_values.append(row[template_header[column_name]
+                                                    ['column_index']])
+        del column_values[0]  # remove header
+        return column_values
 
+    def conditional_format_sheet(self, sheet, template_sheet, template_header):
+        apreciacao_list = self.get_column_values(sheet, 'Apreciação',
+                                                 template_header)
         for row, cell in enumerate(apreciacao_list, start=1):
             coord = xl_rowcol_to_cell(row, 2)
             if 'plenário' in cell.lower():
                 cell_formatting = gs_formatting.get_effective_format(sheet,
                                                                      coord)
-                cell_formatting.textFormat.foregroundColor = gs_formatting.color(1, 0, 0)
+                cell_formatting.textFormat.foregroundColor =\
+                    gs_formatting.color(1, 0, 0)
                 gs_formatting.format_cell_range(sheet,
                                                 coord + ':' + coord,
                                                 cell_formatting)
@@ -180,7 +198,6 @@ class GoogleSheetsReport():
     def get_col_formatting(self, sheet, col_name):
         try:
             cell = sheet.find(col_name)  # column name
-            # cell.col to get second row, not the first
             cell_coordinate = xl_rowcol_to_cell(cell.row,
                                                 cell.col - 1)
             col_formatting = gs_formatting.\
@@ -191,22 +208,18 @@ class GoogleSheetsReport():
 
 
 if __name__ == "__main__":
-    sheet_id = os.getenv("SHEET_ID", "")
-    sheet_template_id = os.getenv("SHEET_TEMPLATE_ID", "")
-
-    template_gs = GoogleSheetsReport(os.getenv("SHEET_TEMPLATE_ID", ""))
+    template_gs = GoogleSheetsReport(constants.SHEET_TEMPLATE_ID)
     template_sheet = template_gs.connect_sheet()
-
-    gs = GoogleSheetsReport(sheet_id)
-    db = gs.connect_to_db()
-
-    today_pls = gs.get_todays_pls(db)
+    gs = GoogleSheetsReport(constants.SHEET_ID)
+    today_pls = gs.get_todays_pls()
     sheet = gs.connect_sheet()
-
-    header = gs.get_header_formatting(template_sheet)
-
-    gs.write_header(sheet, header)
+    template_header_formatting = gs.get_template_header_formatting(
+        template_sheet
+    )
+    gs.write_header(sheet, template_header_formatting)
     rows_num = gs.get_sheet_rows_num(sheet)
-    gs.write_pls_report(db, today_pls, rows_num, sheet, template_sheet, header)
+    gs.write_pls_report(today_pls, rows_num, sheet,
+                        template_sheet, template_header_formatting)
     gs.format_sheet(sheet, template_sheet)
-    gs.conditional_format_sheet(sheet, template_sheet)
+    gs.conditional_format_sheet(sheet, template_sheet,
+                                template_header_formatting)

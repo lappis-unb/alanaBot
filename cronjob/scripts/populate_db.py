@@ -267,7 +267,8 @@ class UpdateProjetos:
             page = get(self.URL_PLS_CAMARA.format(
                     str(json_projeto["dados"]["id"])))
             soup = BeautifulSoup(page.text, 'html.parser')
-            div_apreciacao = soup.find("div", {"id": "informacoesDeTramitacao"})
+            div_apreciacao = soup.find("div",
+                                       {"id": "informacoesDeTramitacao"})
             paragraph_apreciacao = div_apreciacao.find('p')
             paragraph_apreciacao.strong.decompose()
             apreciacao = paragraph_apreciacao.text.strip()
