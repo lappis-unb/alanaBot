@@ -4,6 +4,10 @@ import os
 import telegram
 import datetime
 
+day_of_week = {
+    "dom": 6
+}
+
 
 def connect_to_db():
     TELEGRAM_DB_URI = os.getenv("TELEGRAM_DB_URI", "")
@@ -19,19 +23,26 @@ def get_registered_users(db):
     return registered_users
 
 
-def get_todays_pls(db):
-    today = datetime.date.today().strftime("%d/%m/%Y")
+def get_yesterday_pls(db):
+    yesterday = datetime.date.today() - datetime.timedelta(days=1)
+    weekday = yesterday.weekday()
+    if weekday == day_of_week["dom"]:  # if it's monday get friday pls
+        yesterday = datetime.date.today() - datetime.timedelta(days=3)
     projects = db["Project"]
-    query = {"data": today}
-    today_pls = projects.find(query)
+    query = {"data": yesterday.strftime("%d/%m/%Y")}
+    yesterday_pls = projects.find(query)
     pls_list = []
-    for pl in today_pls:
+    for pl in yesterday_pls:
         pls_list.append(pl)
     return pls_list
 
 
 def send_notification(registered_users, pls):
     bot = telegram.Bot(token=os.getenv("TELEGRAM_TOKEN", ""))
+    notification_msg = "Estou muito animada com as novas atualizações!\n"\
+                       "Observe que uma sociedade em que o interesse da "\
+                       "criança é prioridade, é um lugar melhor "\
+                       "para todos :)"
     for user in registered_users:
         for i, _ in enumerate(pls):
             message = (
@@ -48,6 +59,11 @@ def send_notification(registered_users, pls):
                     tramitacao=pls[i]["tramitacao"],
                 )
             )
+            if i == 0:
+                bot.send_message(
+                    chat_id=user["sender_id"],
+                    text=notification_msg
+                )
             bot.send_message(
                 chat_id=user["sender_id"],
                 text=message,
@@ -59,5 +75,5 @@ def send_notification(registered_users, pls):
 if __name__ == "__main__":
     db = connect_to_db()
     registered_users = get_registered_users(db)
-    today_pls = get_todays_pls(db)
-    send_notification(registered_users, today_pls)
+    yesterday_pls = get_yesterday_pls(db)
+    send_notification(registered_users, yesterday_pls)

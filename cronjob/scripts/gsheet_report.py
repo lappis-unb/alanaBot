@@ -19,6 +19,9 @@ class GoogleSheetsReport():
                             + '/client_secret.json')
         self.sheet_id = sheet_id
         self.DB = constants.DB
+        self.day_of_week = {
+            "dom": 6
+        }
 
     def connect_sheet(self):
         scope = ['https://www.googleapis.com/auth/spreadsheets']
@@ -35,14 +38,16 @@ class GoogleSheetsReport():
             logger.error(ValueError)
         return sheet
 
-    def get_todays_pls(self):
-        today = datetime.date.today().strftime("%d/%m/%Y")
-        # today = "02/10/2019"
+    def get_yesterday_pls(self):
+        yesterday = datetime.date.today() - datetime.timedelta(days=1)
+        weekday = yesterday.weekday()
+        if weekday == self.day_of_week["dom"]:  # if it's monday get friday pls
+            yesterday = datetime.date.today() - datetime.timedelta(days=3)
         projects = self.DB["Project"]
-        query = {"data": today}
-        today_pls = projects.find(query)
+        query = {"data": yesterday.strftime("%d/%m/%Y")}
+        yesterday_pls = projects.find(query)
         pls_list = []
-        for pl in today_pls:
+        for pl in yesterday_pls:
             pls_list.append(pl)
         return pls_list
 
@@ -84,63 +89,74 @@ class GoogleSheetsReport():
         else:
             return field
 
-    def build_result(self, today_pls, index, header):
+    def build_result(self, yesterday_pls, index, header):
         dict_query = dict.fromkeys(list(header.keys()), 0)
         nome_relator = self.check_field_exists(
-            today_pls[index]['relator']['urlRelator'],
-            today_pls[index]['relator']['nome']
+            yesterday_pls[index]['relator']['urlRelator'],
+            yesterday_pls[index]['relator']['nome']
         )
         nome_autor = self.check_field_exists(
-            today_pls[index]['autor']['urlDeputado'],
-            today_pls[index]['autor']['nome']
+            yesterday_pls[index]['autor']['urlDeputado'],
+            yesterday_pls[index]['autor']['nome']
         )
         dict_query = {
             'Proposição': self.format_hyperlink(
-                            today_pls[index]['urlPL'],
-                            today_pls[index]['sigla'] + ' ' +
-                            str(today_pls[index]['numero'])
-                            + '/' + str(today_pls[index]['ano'])),
-            'Tramitação': today_pls[index]['regime'],
-            'Apreciação': today_pls[index]['apreciacao'],
-            'Situação': today_pls[index]['situacao'],
-            'Ementa': today_pls[index]['ementa'],
+                            yesterday_pls[index]['urlPL'],
+                            yesterday_pls[index]['sigla'] + ' ' +
+                            str(yesterday_pls[index]['numero'])
+                            + '/' + str(yesterday_pls[index]['ano'])),
+            'Tramitação': yesterday_pls[index]['regime'],
+            'Apreciação': yesterday_pls[index]['apreciacao'],
+            'Situação': yesterday_pls[index]['situacao'],
+            'Ementa': yesterday_pls[index]['ementa'],
             'Autor': nome_autor,
-            'Partido Autor': today_pls[index]['autor']['siglaPartido'],
-            'Estado Autor': today_pls[index]['autor']['estado'],
+            'Partido Autor': yesterday_pls[index]['autor']['siglaPartido'],
+            'Estado Autor': yesterday_pls[index]['autor']['estado'],
             'Relator': nome_relator,
-            'Partido Relator': today_pls[index]['relator']['siglaPartido'],
-            ' Estado Relator': today_pls[index]['relator']['estado'],
-            'Apensados': today_pls[index]['apensados']
+            'Partido Relator': yesterday_pls[index]['relator']['siglaPartido'],
+            ' Estado Relator': yesterday_pls[index]['relator']['estado'],
+            'Apensados': yesterday_pls[index]['apensados']
         }
         return dict_query
 
-    def write_pls_report(self, today_pls, rows_num,
+    def write_pls_report(self, yesterday_pls, rows_num,
                          sheet, template_sheet, template_header):
         col = 1
-        for i, _ in enumerate(today_pls):
-            query_results = self.build_result(today_pls, i, template_header)
+        for i, _ in enumerate(yesterday_pls):
+            query_results = self.build_result(yesterday_pls, i,
+                                              template_header)
             for key in query_results:
-                row = self.get_sheet_pls(sheet, i, today_pls,
-                                         template_header)
+                row, i = self.get_sheet_pls(sheet, i, yesterday_pls,
+                                            template_header)
+                print('#'*30)
+                print(row)
+                print('#'*30)
                 sheet.update_cell(row, col,
                                   query_results[key])
                 time.sleep(2)  # sleep to avoid sheets api request limit
                 col += 1
             col = 1
 
-    def get_sheet_pls(self, sheet, index, today_pls, template_header):
+    def get_sheet_pls(self, sheet, index, yesterday_pls, template_header):
         sheet_pls = self.get_column_values(sheet, 'Proposição',
                                            template_header)
         try:
-            row = sheet_pls.index(today_pls[index]['sigla'] + ' ' +
-                                  str(today_pls[index]['numero'])
-                                  + '/' + str(today_pls[index]['ano']))
+            row = sheet_pls.index(yesterday_pls[index]['sigla'] + ' ' +
+                                  str(yesterday_pls[index]['numero'])
+                                  + '/' + str(yesterday_pls[index]['ano']))
             # 2 because gspread start indexing at 1 and the header row
             # was removed in the get column values method
-            return row + 2
+            print('ENTROU NO TRY')
+            print(row + 2)
+            if not self.header_exists(sheet):
+                return row + 2, index - 1
+            else:
+                return row + 2, index
         except ValueError:
+            print('ENTROU NO EXCEPT')
             row = rows_num + 1 + index
-            return row
+            print(row)
+            return row, index
 
     def get_template_header_formatting(self, template_sheet):
         if self.header_exists(template_sheet):
@@ -182,11 +198,13 @@ class GoogleSheetsReport():
         return column_values
 
     def conditional_format_sheet(self, sheet, template_sheet, template_header):
-        apreciacao_list = self.get_column_values(sheet, 'Apreciação',
+        apreciacao_list = self.get_column_values(sheet, 'Situação',
                                                  template_header)
         for row, cell in enumerate(apreciacao_list, start=1):
-            coord = xl_rowcol_to_cell(row, 2)
-            if 'plenário' in cell.lower():
+            coord = xl_rowcol_to_cell(row,
+                                      template_header['Situação']
+                                                     ['column_index'])
+            if 'pauta' in cell.lower():
                 cell_formatting = gs_formatting.get_effective_format(sheet,
                                                                      coord)
                 cell_formatting.textFormat.foregroundColor =\
@@ -211,14 +229,14 @@ if __name__ == "__main__":
     template_gs = GoogleSheetsReport(constants.SHEET_TEMPLATE_ID)
     template_sheet = template_gs.connect_sheet()
     gs = GoogleSheetsReport(constants.SHEET_ID)
-    today_pls = gs.get_todays_pls()
+    yesterday_pls = gs.get_yesterday_pls()
     sheet = gs.connect_sheet()
     template_header_formatting = gs.get_template_header_formatting(
         template_sheet
     )
     gs.write_header(sheet, template_header_formatting)
     rows_num = gs.get_sheet_rows_num(sheet)
-    gs.write_pls_report(today_pls, rows_num, sheet,
+    gs.write_pls_report(yesterday_pls, rows_num, sheet,
                         template_sheet, template_header_formatting)
     gs.format_sheet(sheet, template_sheet)
     gs.conditional_format_sheet(sheet, template_sheet,
