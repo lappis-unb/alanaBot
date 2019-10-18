@@ -2,11 +2,15 @@
 import json
 from requests.utils import requote_uri
 from requests import get
+from requests.exceptions import ConnectionError
 from datetime import date, timedelta
 from pymongo import MongoClient
 import os
 import datetime
 from bs4 import BeautifulSoup
+import constants
+import logging
+import time
 
 
 class UpdateProjetos:
@@ -33,6 +37,7 @@ class UpdateProjetos:
         self.URL_APENSADOS_CAMARA = (
             "https://www.camara.leg.br/proposicoesWeb/{}"
         )
+        self.DB = constants.DB
 
     def fetch_palavras_chaves(self):
         json_palavras_chaves = open(self.JSON_PALAVRAS_CHAVES,
@@ -58,11 +63,10 @@ class UpdateProjetos:
     def build_request_url(self, dict_palavras_chaves):
         proposicoes_url = self.URL_API_CAMARA + "proposicoes?"
         for i, palavra_chave in enumerate(dict_palavras_chaves):
-            for j, value in enumerate(dict_palavras_chaves[i]["keywords"]):
-                if j == 0:
-                    proposicoes_url += "keywords=" + value
-                else:
-                    proposicoes_url += "&keywords=" + value
+            if i == 0:
+                proposicoes_url += "keywords=" + palavra_chave
+            else:
+                proposicoes_url += "&keywords=" + palavra_chave
         request_dates = self.fetch_dates()
         proposicoes_url += (
             "&dataInicio="
@@ -88,13 +92,20 @@ class UpdateProjetos:
                 ids_projetos.append(projeto["id"])
         return ids_projetos
 
-    def request_projeto(self, ids_projeto, palavras_chaves):
+    def request_projeto(self, ids_projeto, palavras_chaves, ong_name):
         headers = {"Content-Type": "application/json"}
         req_id = self.URL_API_CAMARA + "proposicoes/{}"
         for id_projeto in ids_projeto:
             request_str = req_id.format(id_projeto)
-            req_projeto = get(request_str, headers=headers)
-            json_projeto = req_projeto.json()
+            for _ in range(100):
+                req_projeto = self.can_connect(request_str, headers)
+                if req_projeto[0]:
+                    logging.info("API is available. Continuing...")
+                    break
+                else:
+                    logging.warning('API is unavailable. Retrying in 0.5 seconds')
+                    time.sleep(0.5)
+            json_projeto = req_projeto[1].json()
             descricao_situacao = (json_projeto["dados"]
                                               ["statusProposicao"]
                                               ["descricaoSituacao"])
@@ -103,9 +114,8 @@ class UpdateProjetos:
                 if (self.PL_ARQUIVADO != descricao_situacao
                    and any(palavra_chave.lower() in ementa.lower()
                            for palavra_chave in palavras_chaves)):
-                    db_data = self.build_projeto_dict(json_projeto)
-                    db = self.connect_to_db()
-                    self.save_projeto_to_db(db_data, db)
+                    db_data = self.build_projeto_dict(json_projeto, ong_name)
+                    self.save_projeto_to_db(db_data)
 
     def get_number_of_pages(self, req_json):
         pages = {"first": 0, "last": 0}
@@ -150,8 +160,8 @@ class UpdateProjetos:
         db = client["bot"]
         return db
 
-    def save_projeto_to_db(self, db_data, db):
-        db.Project.insert_one(db_data)
+    def save_projeto_to_db(self, db_data):
+        self.DB.Project.insert_one(db_data)
 
     def build_deputado_json(self, json_projeto):
         url_autores_pl = (self.URL_AUTORES_PL.format(
@@ -229,7 +239,7 @@ class UpdateProjetos:
             }
             return dados_deputado
 
-    def build_projeto_dict(self, json_projeto):
+    def build_projeto_dict(self, json_projeto, ong_name):
         pl_date = datetime.datetime.strptime(
             json_projeto["dados"]
                         ["statusProposicao"]
@@ -240,6 +250,7 @@ class UpdateProjetos:
         dados_deputado = self.build_deputado_json(json_projeto)
         dados_relator = self.build_relator_json(json_projeto)
         db_data = {
+            "ongName": ong_name,
             "ementa": json_projeto["dados"]["ementa"],
             "tramitacao": (json_projeto["dados"]
                                        ["statusProposicao"]
@@ -299,13 +310,27 @@ class UpdateProjetos:
                         pls_apensados.append(li.span.text)
             except AttributeError:
                 return None
-        return pls_apensados[0]
+        except IndexError:
+            # projeto não tem apensado
+            return None
+        else:
+            return pls_apensados[0]
+
+    def can_connect(self, request_str, headers):
+        try:
+            req_projeto = get(request_str, headers=headers)
+        except ConnectionError:
+            return False
+        return True, req_projeto
+
+    def seed_db(self):
+        ongs = self.DB.Ong.find({})
+        for ong in ongs:
+            ids_projetos = self.fetch_projetos(ong["Keywords"])
+            self.request_projeto(ids_projetos, ong["Keywords"], ong["Name"])
 
 
 if __name__ == "__main__":
     TELEGRAM_DB_URI = os.getenv("TELEGRAM_DB_URI", "")
     p = UpdateProjetos()
-    palavras_chaves = p.fetch_palavras_chaves()
-    lista = p.fetch_projetos(palavras_chaves)
-    palavras = p.fetch_palavras(palavras_chaves)
-    p.request_projeto(lista, palavras)
+    p.seed_db()

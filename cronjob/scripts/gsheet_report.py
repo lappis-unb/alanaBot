@@ -38,13 +38,13 @@ class GoogleSheetsReport():
             logger.error(ValueError)
         return sheet
 
-    def get_yesterday_pls(self):
+    def get_yesterday_pls(self, ong_name):
         yesterday = datetime.date.today() - datetime.timedelta(days=1)
         weekday = yesterday.weekday()
         if weekday == self.day_of_week["dom"]:  # if it's monday get friday pls
             yesterday = datetime.date.today() - datetime.timedelta(days=3)
         projects = self.DB["Project"]
-        query = {"data": yesterday.strftime("%d/%m/%Y")}
+        query = {"data": yesterday.strftime("%d/%m/%Y"), "ongName": ong_name}
         yesterday_pls = projects.find(query)
         pls_list = []
         for pl in yesterday_pls:
@@ -127,17 +127,16 @@ class GoogleSheetsReport():
                                               template_header)
             for key in query_results:
                 row, i = self.get_sheet_pls(sheet, i, yesterday_pls,
-                                            template_header)
-                print('#'*30)
-                print(row)
-                print('#'*30)
+                                            template_header, rows_num)
                 sheet.update_cell(row, col,
                                   query_results[key])
                 time.sleep(2)  # sleep to avoid sheets api request limit
                 col += 1
             col = 1
 
-    def get_sheet_pls(self, sheet, index, yesterday_pls, template_header):
+    def get_sheet_pls(self, sheet, index,
+                      yesterday_pls, template_header,
+                      rows_num):
         sheet_pls = self.get_column_values(sheet, 'Proposição',
                                            template_header)
         try:
@@ -146,16 +145,12 @@ class GoogleSheetsReport():
                                   + '/' + str(yesterday_pls[index]['ano']))
             # 2 because gspread start indexing at 1 and the header row
             # was removed in the get column values method
-            print('ENTROU NO TRY')
-            print(row + 2)
             if not self.header_exists(sheet):
                 return row + 2, index - 1
             else:
                 return row + 2, index
         except ValueError:
-            print('ENTROU NO EXCEPT')
             row = rows_num + 1 + index
-            print(row)
             return row, index
 
     def get_template_header_formatting(self, template_sheet):
@@ -224,20 +219,91 @@ class GoogleSheetsReport():
         except gspread.exceptions.CellNotFound as error:
             raise error
 
+    def get_existing_sheets(self):
+        scope = ['https://www.googleapis.com/auth/spreadsheets']
+        try:
+            creds = ServiceAccountCredentials\
+                            .from_json_keyfile_name(self.secret_file,
+                                                    scope)
+            client = gspread.authorize(creds)
+        except ValueError:
+            logger.error(ValueError)
+        try:
+            sheet = client.open_by_key(self.sheet_id)
+            sheets = sheet.worksheets()
+            existing_pages = []
+            for sheet in sheets:
+                existing_pages.append(sheet.title)
+        except ValueError:
+            logger.error(ValueError)
+        return existing_pages
+
+    def update_sheets(self, existing_pages):
+        scope = ['https://www.googleapis.com/auth/spreadsheets']
+        try:
+            creds = ServiceAccountCredentials\
+                            .from_json_keyfile_name(self.secret_file,
+                                                    scope)
+            client = gspread.authorize(creds)
+        except ValueError:
+            logger.error(ValueError)
+        try:
+            sheet = client.open_by_key(self.sheet_id)
+            ongs = self.DB.Ong.find({}, {"Name": 1})
+            for ong in ongs:
+                if ong['Name'] not in existing_pages:
+                    sheet.add_worksheet(title=ong['Name'],
+                                        rows="10000",
+                                        cols="26")
+        except ValueError:
+            logger.error(ValueError)
+
+    def connect_sheet_by_name(self, name):
+        scope = ['https://www.googleapis.com/auth/spreadsheets']
+        try:
+            creds = ServiceAccountCredentials\
+                            .from_json_keyfile_name(self.secret_file,
+                                                    scope)
+            client = gspread.authorize(creds)
+        except ValueError:
+            logger.error(ValueError)
+        try:
+            sheet = client.open_by_key(self.sheet_id)
+            sheet = sheet.worksheet(name)
+        except ValueError:
+            logger.error(ValueError)
+        return sheet
+
+    def write_sheet_report(self, template_header_formatting):
+        ongs = self.DB.Ong.find({})
+        for ong in ongs:
+            sheet = self.connect_sheet_by_name(ong["Name"])
+            yesterday_pls = self.get_yesterday_pls(ong["Name"])
+            gs.write_header(sheet, template_header_formatting)
+            rows_num = gs.get_sheet_rows_num(sheet)
+            gs.write_pls_report(yesterday_pls, rows_num, sheet,
+                                template_sheet, template_header_formatting)
+            gs.format_sheet(sheet, template_sheet)
+            gs.conditional_format_sheet(sheet, template_sheet,
+                                        template_header_formatting)
+
 
 if __name__ == "__main__":
     template_gs = GoogleSheetsReport(constants.SHEET_TEMPLATE_ID)
     template_sheet = template_gs.connect_sheet()
     gs = GoogleSheetsReport(constants.SHEET_ID)
-    yesterday_pls = gs.get_yesterday_pls()
-    sheet = gs.connect_sheet()
+    existing_pages = gs.get_existing_sheets()
+    gs.update_sheets(existing_pages)
     template_header_formatting = gs.get_template_header_formatting(
         template_sheet
     )
-    gs.write_header(sheet, template_header_formatting)
-    rows_num = gs.get_sheet_rows_num(sheet)
-    gs.write_pls_report(yesterday_pls, rows_num, sheet,
-                        template_sheet, template_header_formatting)
-    gs.format_sheet(sheet, template_sheet)
-    gs.conditional_format_sheet(sheet, template_sheet,
-                                template_header_formatting)
+    gs.write_sheet_report(template_header_formatting)
+    # yesterday_pls = gs.get_yesterday_pls()
+    # sheet = gs.connect_sheet()
+    # gs.write_header(sheet, template_header_formatting)
+    # rows_num = gs.get_sheet_rows_num(sheet)
+    # gs.write_pls_report(yesterday_pls, rows_num, sheet,
+    #                     template_sheet, template_header_formatting)
+    # gs.format_sheet(sheet, template_sheet)
+    # gs.conditional_format_sheet(sheet, template_sheet,
+    #                             template_header_formatting)
