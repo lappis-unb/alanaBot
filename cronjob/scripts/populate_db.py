@@ -103,7 +103,8 @@ class UpdateProjetos:
                     logging.info("API is available. Continuing...")
                     break
                 else:
-                    logging.warning('API is unavailable. Retrying in 0.5 seconds')
+                    logging.warning("API is unavailable. Retrying "
+                                    "in 0.5 seconds")
                     time.sleep(0.5)
             json_projeto = req_projeto[1].json()
             descricao_situacao = (json_projeto["dados"]

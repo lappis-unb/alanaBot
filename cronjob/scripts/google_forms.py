@@ -2,11 +2,6 @@ import gspread
 import logging
 from oauth2client.service_account import ServiceAccountCredentials
 import os
-import time
-import datetime
-# import gspread_formatting
-import gspread_formatting as gs_formatting
-from xlsxwriter.utility import xl_rowcol_to_cell, xl_cell_to_rowcol
 import constants
 
 
@@ -64,7 +59,8 @@ class GoogleForms():
         for i, ong in enumerate(ongs):
             str_palavras = ''.join(palavras_chaves[i])
             lista_palavras = str_palavras.split(',')
-            palavras_formatadas = [palavra.lstrip() for palavra in lista_palavras]
+            palavras_formatadas = [palavra.lstrip() for palavra in
+                                   lista_palavras]
             dict_palavras[ong] = palavras_formatadas
         return dict_palavras
 
