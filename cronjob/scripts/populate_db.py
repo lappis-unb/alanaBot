@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from requests import get
 import constants
 import utils
 import camara_helper
@@ -55,45 +54,6 @@ def seed_db():
     for ong in ongs:
         ids_projetos = camara_helper.get_projetos(ong["Keywords"])
         request_projeto(ids_projetos, ong["Keywords"], ong["Name"])
-
-
-def teste_senado():
-    headers = {"Accept": "application/json"}
-    ongs = constants.DB.Ong.find({})
-    r = get("http://legis.senado.leg.br/dadosabertos/materia/assuntos",
-            headers=headers).json()
-    projetos = []
-    print('EXECUTOU O TESTE DO SENADO')
-    for ong in ongs:
-        codigos_assuntos = []
-        keywords = ong["Keywords"]
-        for assunto in r["ListaAssuntos"]["Assuntos"]["Assunto"]:
-            if utils.search_keyword(assunto["AssuntoEspecifico"],
-                                    keywords):
-                codigos_assuntos.append(assunto["Codigo"])
-        print(codigos_assuntos)
-        for codigo in codigos_assuntos:
-            req = get(f"http://legis.senado.leg.br/dadosabertos/materia/atualizadas?codAssuntoEspecifico={codigo}&numdias=3",
-                      headers=headers).json()
-            for materia in req['ListaMateriasAtualizadas']['Materias']['Materia']:
-                projetos.append(materia["IdentificacaoMateria"]["CodigoMateria"])
-            for projeto in projetos:
-                proj_req = get(f"http://legis.senado.leg.br/dadosabertos/materia/{projeto}",
-                               headers=headers).json()
-                ementa = (proj_req['DetalheMateria']
-                                  ['Materia']
-                                  ["DadosBasicosMateria"]
-                                  ["EmentaMateria"])
-                if utils.search_keyword(ementa, keywords):
-                    print('#'*30)
-                    print(proj_req['DetalheMateria']
-                                                    ['Materia']
-                                                    ["DadosBasicosMateria"]
-                                                    ["EmentaMateria"])
-                    print('#'*30)
-                    print('A'*30)
-                    print(projeto)
-                    print('A'*30)
 
 
 if __name__ == "__main__":

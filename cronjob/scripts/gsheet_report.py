@@ -91,32 +91,61 @@ class GoogleSheetsReport():
 
     def build_result(self, yesterday_pls, index, header):
         dict_query = dict.fromkeys(list(header.keys()), 0)
-        nome_relator = self.check_field_exists(
-            yesterday_pls[index]['relator']['urlRelator'],
-            yesterday_pls[index]['relator']['nome']
-        )
         nome_autor = self.check_field_exists(
-            yesterday_pls[index]['autor']['urlDeputado'],
+            yesterday_pls[index]['autor']['urlParlamentar'],
             yesterday_pls[index]['autor']['nome']
         )
-        dict_query = {
-            'Proposição': self.format_hyperlink(
-                            yesterday_pls[index]['urlPL'],
-                            yesterday_pls[index]['sigla'] + ' ' +
-                            str(yesterday_pls[index]['numero'])
-                            + '/' + str(yesterday_pls[index]['ano'])),
-            'Tramitação': yesterday_pls[index]['regime'],
-            'Apreciação': yesterday_pls[index]['apreciacao'],
-            'Situação': yesterday_pls[index]['situacao'],
-            'Ementa': yesterday_pls[index]['ementa'],
-            'Autor': nome_autor,
-            'Partido Autor': yesterday_pls[index]['autor']['siglaPartido'],
-            'Estado Autor': yesterday_pls[index]['autor']['estado'],
-            'Relator': nome_relator,
-            'Partido Relator': yesterday_pls[index]['relator']['siglaPartido'],
-            ' Estado Relator': yesterday_pls[index]['relator']['estado'],
-            'Apensados': yesterday_pls[index]['apensados']
-        }
+
+        if yesterday_pls[index]['casa'] == 'Camara':
+            nome_relator = self.check_field_exists(
+                yesterday_pls[index]['relator']['urlParlamentar'],
+                yesterday_pls[index]['relator']['nome']
+            )
+            dict_query = {
+                'Proposição': self.format_hyperlink(
+                                yesterday_pls[index]['urlPL'],
+                                yesterday_pls[index]['sigla'] + ' ' +
+                                str(yesterday_pls[index]['numero'])
+                                + '/' + str(yesterday_pls[index]['ano'])),
+                'Tramitação': yesterday_pls[index]['regime'],
+                'Apreciação': yesterday_pls[index]['apreciacao'],
+                'Situação': yesterday_pls[index]['situacao'],
+                'Ementa': yesterday_pls[index]['ementa'],
+                'Autor': nome_autor,
+                'Partido Autor': (yesterday_pls[index]
+                                               ['autor']
+                                               ['siglaPartido']),
+                'Estado Autor': (yesterday_pls[index]
+                                              ['autor']
+                                              ['estado']),
+                'Relator': nome_relator,
+                'Partido Relator': (yesterday_pls[index]
+                                                 ['relator']
+                                                 ['siglaPartido']),
+                ' Estado Relator': (yesterday_pls[index]['relator']
+                                                        ['estado']),
+                'Apensados': yesterday_pls[index]['apensados']
+
+            }
+        else:
+            dict_query = {
+                'Proposição': self.format_hyperlink(
+                                yesterday_pls[index]['urlPL'],
+                                yesterday_pls[index]['sigla'] + ' ' +
+                                str(yesterday_pls[index]['numero'])
+                                + '/' + str(yesterday_pls[index]['ano'])),
+                'Tramitação': None,
+                'Apreciação': None,
+                'Situação': yesterday_pls[index]['situacao'],
+                'Ementa': yesterday_pls[index]['ementa'],
+                'Autor': nome_autor,
+                'Partido Autor': yesterday_pls[index]['autor']['siglaPartido'],
+                'Estado Autor': yesterday_pls[index]['autor']['estado'],
+                'Apensados': None,
+                'Relator': None,
+                'Partido Relator': None,
+                ' Estado Relator': None
+            }
         return dict_query
 
     def write_pls_report(self, yesterday_pls, rows_num,
@@ -130,7 +159,7 @@ class GoogleSheetsReport():
                                             template_header, rows_num)
                 sheet.update_cell(row, col,
                                   query_results[key])
-                time.sleep(2)  # sleep to avoid sheets api request limit
+                time.sleep(3)  # sleep to avoid sheets api request limit
                 col += 1
             col = 1
 

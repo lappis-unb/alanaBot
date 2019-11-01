@@ -282,14 +282,14 @@ def get_json_fields(relator=False):
     """
     json_fields = {
         "deputado": "autor",
-        "urlApi": "urlApiDeputado",
-        "urlDeputado": "urlDeputado"
+        "urlApi": "urlApiParlamentar",
+        "urlParlamentar": "urlParlamentar"
     }
     if relator:
         json_fields = {
             "deputado": "relator",
-            "urlApi": "urlApiRelator",
-            "urlDeputado": "urlRelator"
+            "urlApi": "urlApiParlamentar",
+            "urlParlamentar": "urlParlamentar"
         }
     return json_fields
 
@@ -320,11 +320,10 @@ def build_deputado_final(json_fields, url_deputado):
                                     ["nome"].lower().title()),
                 json_fields["urlApi"]: (dados_deputado["ultimoStatus"]
                                                       ["uri"]),
-                json_fields["urlDeputado"]: (constants.SITE_CAMARA +
-                                             "deputados/"
-                                             f"{dados_deputado['id']}"),
-                "siglaPartido": (dados_deputado["ultimoStatus"]
-                                               ["siglaPartido"]),
+                json_fields["urlParlamentar"]: (constants.SITE_CAMARA +
+                                                "deputados/"
+                                                f"{dados_deputado['id']}"),
+                "siglaPartido": dados_deputado["ultimoStatus"]["siglaPartido"],
                 "urlPartido": dados_deputado["ultimoStatus"]["uriPartido"],
                 "estado": dados_deputado["ultimoStatus"]["siglaUf"],
                 "sexo": dados_deputado["sexo"]
@@ -338,7 +337,7 @@ def build_deputado_final(json_fields, url_deputado):
                 "siglaPartido": None,
                 "estado": None,
                 "sexo": None,
-                json_fields["urlDeputado"]: None
+                json_fields["urlParlamentar"]: None
             }
         }
     return dados_deputado
@@ -384,7 +383,8 @@ def build_db_data(json_projeto, ong_name, pl_date,
         "regime": (json_projeto["dados"]
                                ["statusProposicao"]
                                ["regime"]),
-        "apensados": crawl_apensados(json_projeto)
+        "apensados": crawl_apensados(json_projeto),
+        "casa": "Camara"
     }
     return db_data
 

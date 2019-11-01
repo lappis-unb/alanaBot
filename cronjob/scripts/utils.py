@@ -16,7 +16,10 @@ def search_keyword(search_string, keywords_list):
 
 def can_connect(request_str):
     try:
-        headers = {"Content-Type": "application/json"}
+        headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        }
         req_projeto = get(request_str, headers=headers)
     except ConnectionError:
         print("CONNECTION ERROR")
