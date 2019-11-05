@@ -13,6 +13,6 @@ JSON_PALAVRAS_CHAVES = (
             os.path.dirname(os.path.abspath(__file__)) +
             "/palavras-chaves.json"
         )
-QTY_DAYS = 1
+QTY_DAYS = 5
 URL_API_SENADO = "http://legis.senado.leg.br/dadosabertos/"
 URL_WEB_SENADO = "https://www25.senado.leg.br/"

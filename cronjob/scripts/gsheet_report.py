@@ -95,57 +95,45 @@ class GoogleSheetsReport():
             yesterday_pls[index]['autor']['urlParlamentar'],
             yesterday_pls[index]['autor']['nome']
         )
-
-        if yesterday_pls[index]['casa'] == 'Camara':
-            nome_relator = self.check_field_exists(
-                yesterday_pls[index]['relator']['urlParlamentar'],
-                yesterday_pls[index]['relator']['nome']
-            )
-            dict_query = {
-                'Proposição': self.format_hyperlink(
-                                yesterday_pls[index]['urlPL'],
-                                yesterday_pls[index]['sigla'] + ' ' +
-                                str(yesterday_pls[index]['numero'])
-                                + '/' + str(yesterday_pls[index]['ano'])),
-                'Tramitação': yesterday_pls[index]['regime'],
-                'Apreciação': yesterday_pls[index]['apreciacao'],
-                'Situação': yesterday_pls[index]['situacao'],
-                'Ementa': yesterday_pls[index]['ementa'],
-                'Autor': nome_autor,
-                'Partido Autor': (yesterday_pls[index]
-                                               ['autor']
-                                               ['siglaPartido']),
-                'Estado Autor': (yesterday_pls[index]
-                                              ['autor']
-                                              ['estado']),
-                'Relator': nome_relator,
-                'Partido Relator': (yesterday_pls[index]
-                                                 ['relator']
-                                                 ['siglaPartido']),
-                ' Estado Relator': (yesterday_pls[index]['relator']
-                                                        ['estado']),
-                'Apensados': yesterday_pls[index]['apensados']
-
-            }
+        nome_relator = self.check_field_exists(
+            yesterday_pls[index]['relator']['urlParlamentar'],
+            yesterday_pls[index]['relator']['nome']
+        )
+        casa_pl = yesterday_pls[index]['casa']
+        if casa_pl == 'Camara':
+            apreciacao = yesterday_pls[index]['apreciacao']
+            apensados = yesterday_pls[index]['apensados']
+            tramitacao = yesterday_pls[index]['regime']
         else:
-            dict_query = {
-                'Proposição': self.format_hyperlink(
-                                yesterday_pls[index]['urlPL'],
-                                yesterday_pls[index]['sigla'] + ' ' +
-                                str(yesterday_pls[index]['numero'])
-                                + '/' + str(yesterday_pls[index]['ano'])),
-                'Tramitação': None,
-                'Apreciação': None,
-                'Situação': yesterday_pls[index]['situacao'],
-                'Ementa': yesterday_pls[index]['ementa'],
-                'Autor': nome_autor,
-                'Partido Autor': yesterday_pls[index]['autor']['siglaPartido'],
-                'Estado Autor': yesterday_pls[index]['autor']['estado'],
-                'Apensados': None,
-                'Relator': None,
-                'Partido Relator': None,
-                ' Estado Relator': None
-            }
+            apreciacao = None
+            apensados = None
+            tramitacao = yesterday_pls[index]['tramitacao']
+        dict_query = {
+            'Proposição': self.format_hyperlink(
+                            yesterday_pls[index]['urlPL'],
+                            yesterday_pls[index]['sigla'] + ' ' +
+                            str(yesterday_pls[index]['numero'])
+                            + '/' + str(yesterday_pls[index]['ano'])
+                            + f' - {casa_pl}'),
+            'Tramitação': tramitacao,
+            'Apreciação': apreciacao,
+            'Situação': yesterday_pls[index]['situacao'],
+            'Ementa': yesterday_pls[index]['ementa'],
+            'Autor': nome_autor,
+            'Partido Autor': (yesterday_pls[index]
+                                           ['autor']
+                                           ['siglaPartido']),
+            'Estado Autor': (yesterday_pls[index]
+                                          ['autor']
+                                          ['estado']),
+            'Relator': nome_relator,
+            'Partido Relator': (yesterday_pls[index]
+                                             ['relator']
+                                             ['siglaPartido']),
+            ' Estado Relator': (yesterday_pls[index]['relator']
+                                                    ['estado']),
+            'Apensados': apensados
+        }
         return dict_query
 
     def write_pls_report(self, yesterday_pls, rows_num,
@@ -169,9 +157,11 @@ class GoogleSheetsReport():
         sheet_pls = self.get_column_values(sheet, 'Proposição',
                                            template_header)
         try:
+            casa_pl = yesterday_pls[index]['casa']
             row = sheet_pls.index(yesterday_pls[index]['sigla'] + ' ' +
                                   str(yesterday_pls[index]['numero'])
-                                  + '/' + str(yesterday_pls[index]['ano']))
+                                  + '/' + str(yesterday_pls[index]['ano'])
+                                  + f' - {casa_pl}')
             # 2 because gspread start indexing at 1 and the header row
             # was removed in the get column values method
             if not self.header_exists(sheet):
@@ -327,12 +317,3 @@ if __name__ == "__main__":
         template_sheet
     )
     gs.write_sheet_report(template_header_formatting)
-    # yesterday_pls = gs.get_yesterday_pls()
-    # sheet = gs.connect_sheet()
-    # gs.write_header(sheet, template_header_formatting)
-    # rows_num = gs.get_sheet_rows_num(sheet)
-    # gs.write_pls_report(yesterday_pls, rows_num, sheet,
-    #                     template_sheet, template_header_formatting)
-    # gs.format_sheet(sheet, template_sheet)
-    # gs.conditional_format_sheet(sheet, template_sheet,
-    #                             template_header_formatting)

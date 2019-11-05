@@ -384,7 +384,7 @@ def build_db_data(json_projeto, ong_name, pl_date,
                                ["statusProposicao"]
                                ["regime"]),
         "apensados": crawl_apensados(json_projeto),
-        "casa": "Camara"
+        "casa": "Câmara"
     }
     return db_data
 
