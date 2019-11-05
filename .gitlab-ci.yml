@@ -1,5 +1,9 @@
 image: python:3.6-slim
 
+before_script:
+  - apt-get update --yes
+  - apt-get install gcc
+
 variables:
   BOT_IMAGE: $DOCKERHUB_USER/bot
   COACH_IMAGE: $DOCKERHUB_USER/coach
@@ -52,13 +56,14 @@ build requirements:
     - docker:dind
   script:
     - docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
-    - cd ./docker/bot
-    - ./build-base.sh publish
+    - cd ./docker
+    - docker build . -f docker/requirements.Dockerfile -t lappis/botrequirements:boilerplate
+    - docker push lappis/botrequirements:boilerplate
   only:
     refs:
       - master
     changes:
-      - ./docker/bot/requirements.txt
+      - ./requirements.txt
   environment: homolog
 
 

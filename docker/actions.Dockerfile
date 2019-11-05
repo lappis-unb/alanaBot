@@ -1,9 +1,9 @@
-FROM lappis/botrequirements:boilerplate
+FROM botrequirements
 
 ADD ./bot/actions/ /bot/actions/
 ADD ./bot/Makefile /bot/Makefile
 
-WORKDIR bot/
+WORKDIR /bot
 
 EXPOSE 5055
 HEALTHCHECK --interval=300s --timeout=60s --retries=5 \
