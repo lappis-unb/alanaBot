@@ -57,8 +57,9 @@ run-notebooks:
 	sensible-browser --no-sandbox http://localhost:8888
 
 train:
-	docker-compose up coach
-	docker-compose build bot
+	docker-compose run --rm bot_telegram rasa train -vv --out models/
+	# docker-compose up coach
+	# docker-compose build bot
 
 validate:
 	docker-compose run --rm coach rasa data validate --domain domain.yml --data data/ -vv

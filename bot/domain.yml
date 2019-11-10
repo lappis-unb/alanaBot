@@ -8,7 +8,6 @@ intents:
   - despedir
   - sobrenos
   - cadastrar
-  - descadastrar
   - novidades
   - start
   - ultimas
@@ -23,6 +22,8 @@ intents:
 entities:
   - command
   - pl_numbers
+  - cadastro
+  - descadastro
 
 slots:
   ultimas:
@@ -98,24 +99,24 @@ templates:
   utter_continuar_conversa:
     - text: |
         E aí, qual nosso próximo assunto?
-        
-  utter_botao:
-  - text: |
-        Enviando mensagem do botão
-    channel: "telegram"
-    buttons:
-    - title: "afirmação"
-      payload: "afirmação de botão"
-    - title: "negação"
-      payload: "negação de botão"
 
-  utter_afirmacao_botao:
-  - text: |
-        Mensagem de afirmação após clique em botão
+  utter_cumprimentar:
+    - text: |
+        Oi eu vou te cumprimentar hahaha
+  
+  utter_start:
+    - text: |
+        Oi, eu sou a Alana, a Assistente Virtual do programa Prioridade Absoluta.
+        Estou aqui para te informar sobre as novidades das proposições de Leis para Crianças e Adolescentes.
+        Afinal, cuidar das crianças e dos adolescentes, é cuidar de todos nós!
+        Para conversar comigo basta escolher qual opção você prefere no momento
+        #cadastrar - Caso você deseje receber notificações sobre as novidades das Leis
+        #descadastrar - Para deixar de receber as notificações
+        #ajuda - Para entender como podemos interagir
+        #novidades - Para saber sobre as últimas novidades de Leis
+        #sobrenos - Para conhecer um pouco mais sobre o nosso trabalho
+        #sugestao - Para me dizer uma sugestão
 
-  utter_negacao_botao:
-  - text: |
-        Mensagem de negação após clique em botão
 
 actions:
   - utter_default
@@ -127,6 +128,7 @@ actions:
   - utter_sobrenos
   - utter_novidades
   - utter_notificacao
+  - utter_start
 
   - action_start
   - action_descadastro

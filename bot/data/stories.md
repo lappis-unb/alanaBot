@@ -1,20 +1,24 @@
 
 <!-- actions -->
 ## action_cadastro
-* cadastrar
+* action_cadastro{"cadastro":"#cadastrar"}
   - action_cadastro
 
 ## action_descadastro
-* descadastrar
+* action_descadastro{"descadastro":"#descadastrar"}
   - action_descadastro
 
 ## action_start
 * start
+  - utter_start
   - action_start
+  - action_menu
 
 ## action_start+sugestao
 * start
+  - utter_start
   - action_start
+  - action_menu
 * sugestao
   - utter_sugestao
   - action_voltar_menu
@@ -35,14 +39,18 @@
 
 ## action_start+action_cadastro
 * start
+  - utter_start
   - action_start
-* cadastrar
+  - action_menu
+* action_cadastro{"cadastro":"#cadastrar"}
   - action_cadastro
 
 ## action_start+action_descadastro
 * start
+  - utter_start
   - action_start
-* descadastrar
+  - action_menu
+* action_descadastro{"descadastro":"#descadastrar"}
   - action_descadastro
 
 ## path_ultimas+sugestao
@@ -91,13 +99,13 @@
 ## path_cumprimentar+cadastrar
 * cumprimentar
   - utter_cumprimentar
-* cadastrar
+* action_cadastro{"cadastro":"#cadastrar"}
   - action_cadastro
 
 ## path_cumprimentar+descadastrar
 * cumprimentar
   - utter_cumprimentar
-* descadastrar
+* action_descadastro{"descadastro":"#descadastrar"}
   - action_descadastro
 
 ## fallback

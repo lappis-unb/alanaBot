@@ -28,16 +28,16 @@ class ActionMenu(Action):
 
     def build_menu(self, sender_id):
         buttons = []
-        commands = ['#cadastrar', '#descadastrar',
-                    '#sobrenos', '#novidades', '#sugestao']
+        commands = ['/cadastrar', '/descadastrar',
+                    '/sobrenos', '/novidades', '/sugestao']
         for cmd in commands:
-            if cmd == '#sobrenos':
+            if cmd == '/sobrenos':
                 buttons.append(telegram.InlineKeyboardButton(
                                 text='sobre nos',
                                 callback_data=cmd))
             else:
                 buttons.append(telegram.InlineKeyboardButton(
-                                text=cmd.replace('#', ''),
+                                text=cmd.replace('/', ''),
                                 callback_data=cmd))
         cmd_menu = [buttons[i:i+2] for i in range(0, len(buttons), 2)]
         reply_markup = telegram.InlineKeyboardMarkup(cmd_menu)

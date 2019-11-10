@@ -24,7 +24,7 @@
 - boa tarde
 - boa noite
 
-## intent: tudo_bem
+## intent:tudo_bem
 - oi alana, como estão as coisas
 - oi alana, como estao as coisas
 - oi alana, como vai
@@ -90,53 +90,6 @@
 - ajuda
 - ajudar
 - menu
-
-## intent:cadastrar
-- [cadastrar](command)
-- [#cadastrar](command)
-- [/cadastrar](command)
-- quero receber notificações de pls
-- quero me cadastrar, por favor
-- quero receber notificações
-- me manda notificações de pls
-- me envia as atualizações das leis
-- me envia as atualizacoes
-- me envia as atualizações
-- me envia as notificações
-- me envia as notificacoes
-- me manda as notificações
-- me manda as notificacoes
-- me manda notificações
-- me manda notificacoes
-- me cadastra, por favor
-- quero me cadastrar
-- quero me inscrever
-- notificações
-- notificacoes
-- me cadastra
-- me inscreve
-- atualizações
-- atualizacoes
-
-## intent:descadastrar
-- [descadastrar](command)
-- [#descadastrar](command)
-- [/descadastrar](command)
-- para de me mandar notificações
-- para de me mandar notificações de pls
-- não quero receber notificações de 
-- quero me descadastrar, por favor
-- não quero receber notificações
-- me descadastra, por favor
-- não quero mais receber notificações
-- nao quero mais receber notificacoes
-- não me envia mais notificações
-- não me envia mais notificacoes
-- não quero mais receber
-- nao quero mais receber
-- quero me descadastrar
-- me descadastra
-- descadastrar
 
 ## intent:despedir
 - tchau
@@ -206,16 +159,58 @@
 - tramitacoes
 
 <!-- actions -->
+## regex:cadastro
+- ^(#|\/|)cadastrar
 
 ## intent:action_cadastro
-- [cadastrar](command)
-- [/cadastrar](command)
-- [#cadastrar](command)
+- [/cadastrar](cadastro)
+- [#cadastrar](cadastro)
+- [cadastrar](cadastro)
+- quero receber notificações de pls
+- quero me cadastrar, por favor
+- quero receber notificações
+- me manda notificações de pls
+- me envia as atualizações das leis
+- me envia as atualizacoes
+- me envia as atualizações
+- me envia as notificações
+- me envia as notificacoes
+- me manda as notificações
+- me manda as notificacoes
+- me manda notificações
+- me manda notificacoes
+- me cadastra, por favor
+- quero me cadastrar
+- quero me inscrever
+- notificações
+- notificacoes
+- me cadastra
+- me inscreve
+- atualizações
+- atualizacoes
+
+## regex:descadastro
+- ^(#|\/|)descadastrar
 
 ## intent:action_descadastro
-- [descadastrar](command)
-- [/descadastrar](command)
-- [#descadastrar](command)
+- [descadastrar](descadastro)
+- [#descadastrar](descadastro)
+- [/descadastrar](descadastro)
+- para de me mandar notificações
+- para de me mandar notificações de pls
+- não quero receber notificações de 
+- quero me descadastrar, por favor
+- não quero receber notificações
+- me descadastra, por favor
+- não quero mais receber notificações
+- nao quero mais receber notificacoes
+- não me envia mais notificações
+- não me envia mais notificacoes
+- não quero mais receber
+- nao quero mais receber
+- quero me descadastrar
+- me descadastra
+- descadastrar
 
 ## intent:action_start
 - [start](command)
