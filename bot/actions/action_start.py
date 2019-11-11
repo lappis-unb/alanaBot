@@ -1,8 +1,8 @@
 from rasa_core_sdk import Action
 from pymongo import MongoClient
-from .constants import TELEGRAM_DB_URI, TELEGRAM_TOKEN
+from .constants import TELEGRAM_DB_URI, TELEGRAM_API_URL
 import logging
-import telegram
+import requests
 
 
 class ActionStart(Action):
@@ -22,12 +22,15 @@ class ActionStart(Action):
         return []
 
     def build_user_data(self, sender_id):
-        bot = telegram.Bot(TELEGRAM_TOKEN)
-        telegram_data = bot.get_chat(sender_id)
+        get_chat_url = (TELEGRAM_API_URL +
+                        f"getChat?chat_id={sender_id}")
+        telegram_data = requests.get(get_chat_url).json()
         user_data = {
             "sender_id": sender_id,
-            "first_name": telegram_data["first_name"],
-            "username": telegram_data["username"],
+            "first_name": telegram_data["result"]
+                                       ["first_name"],
+            "username": telegram_data["result"]
+                                     ["username"],
             "registered": False,
         }
         return user_data

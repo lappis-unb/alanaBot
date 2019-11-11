@@ -24,6 +24,8 @@ entities:
   - pl_numbers
   - cadastro
   - descadastro
+  - sobrenos
+  - novidades
 
 slots:
   ultimas:

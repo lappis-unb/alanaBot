@@ -2,4 +2,3 @@ rasa==1.4.2
 nltk==3.4.5
 elasticsearch==7.0.4
 flake8==3.7.8
-python-telegram-bot==11.1.0

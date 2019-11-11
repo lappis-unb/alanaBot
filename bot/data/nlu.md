@@ -103,7 +103,13 @@
 - até mais
 - até a próxima
 
+## regex:sugestao_regex
+- ^(#|\/|)sugestao
+
 ## intent:sugestao
+- [/sugestao](sugestao_regex)
+- [#sugestao](sugestao_regex)
+- [sugestao](sugestao_regex)
 - quero te dizer uma sugestão
 - quero te dizer uma sugestao
 - quero te falar uma sugestão
@@ -117,13 +123,17 @@
 - voce podia falar sobre
 - você precisa melhorar
 - vc precisa melhorar
-- /sugestao
 - #sugestão
 - sugestão
-- sugestao
 - email
 
+## regex:sobrenos_regex
+- ^(#|\/|)sobrenos
+
 ## intent:sobrenos
+- [/sobrenos](sobrenos_regex)
+- [#sobrenos](sobrenos_regex)
+- [sobrenos](sobrenos_regex)
 - que tipo de trabalho vocês desenvolvem
 - me fala sobre a ong que você trabalha
 - me fala sobre o projeto de vocês
@@ -143,11 +153,13 @@
 - sobre nos
 - sobrenos
 
+## regex:novidades_regex
+- ^(#|\/|)novidades
 
 ## intent:novidades
-- [novidades](command)
-- [#novidades](command)
-- [/novidades](command)
+- [novidades](novidades_regex)
+- [#novidades](novidades_regex)
+- [/novidades](novidades_regex)
 - quero ler as últimas novidades
 - quero ler as ultimas novidades
 - quero ler as últimas tramitações

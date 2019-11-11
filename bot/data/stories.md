@@ -30,7 +30,7 @@
   - action_voltar_menu
 
 ## novidades+action_ultimas
-* novidades
+* novidades{"novidades_regex":"#novidades"}
   - utter_novidades
 * ultimas
   - utter_notificacao
@@ -65,7 +65,7 @@
 * ultimas
   - utter_notificacao
   - action_ultimas
-* sobrenos
+* sobrenos{"sobrenos_regex":"#sobrenos"}
   - utter_sobrenos
   - action_voltar_menu
 
@@ -78,7 +78,7 @@
 ## path_cumprimentar+sobrenos
 * cumprimentar
   - utter_cumprimentar
-* sobrenos
+* sobrenos{"sobrenos_regex":"#sobrenos"}
   - utter_sobrenos
   - action_voltar_menu
 
@@ -132,7 +132,7 @@
 ## path_menu+sobrenos
 * menu_voltar
   - action_menu
-* sobrenos
+* sobrenos{"sobrenos_regex":"#sobrenos"}
   - utter_sobrenos
   - action_voltar_menu
 
@@ -154,13 +154,13 @@
 ## path_tudo_bem
 * tudo_bem
   -  utter_tudo_bem
-* sobrenos
+* sobrenos{"sobrenos_regex":"#sobrenos"}
   - utter_sobrenos
 
 ## path_tudo_bem+sobrenos
 * tudo_bem
   -  utter_tudo_bem
-* sobrenos
+* sobrenos{"sobrenos_regex":"#sobrenos"}
   - utter_sobrenos
   - action_voltar_menu
 
@@ -184,5 +184,5 @@
   - action_menu
 
 ## path_novidades
-* novidades
+* novidades{"novidades_regex":"#novidades"}
   - utter_novidades
