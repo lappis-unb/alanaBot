@@ -1,0 +1,140 @@
+intents:
+  - out_of_scope
+  - ajuda
+  - tudo_bem
+  - menu_voltar
+  - sugestao
+  - cumprimentar
+  - despedir
+  - sobrenos
+  - cadastrar
+  - novidades
+  - start
+  - ultimas
+
+  - action_descadastro
+  - action_cadastro
+  - action_start
+  - action_ultimas
+  - action_menu
+  - action_voltar_menu
+
+entities:
+  - command
+  - pl_numbers
+  - cadastro
+  - descadastro
+  - sobrenos
+  - novidades
+
+slots:
+  ultimas:
+    type: text
+  pl_number:
+    type: text
+
+
+templates:
+  utter_default:
+    - text: |
+        Desculpe, ainda não sei falar sobre isso ou talvez não consegui entender direito
+        Você pode perguntar de novo de outro jeito?
+
+    - text: |
+        Hummmm... Não sei se entendi. Pode escrever de outra forma?
+
+    - text: |
+        Acho que não te entendi, você pode me perguntar de novo usando outras palavras?
+
+    - text: |
+        Vamos tentar mais uma vez? Eu não consegui te entender direito, me pergunta de outro jeito?
+
+  utter_tudo_bem:
+    - text: |
+        Estou bem, obrigada. Em que posso te ajudar?
+
+        #cadastrar - Caso você deseje receber notificações sobre as novidades das Leis
+        #descadastrar - Para deixar de receber as notificações
+        #ajuda - Para entender como podemos interagir
+        #novidades - Para saber sobre as últimas novidades de Leis
+        #sobrenos - Para conhecer um pouco mais sobre o nosso trabalho
+        #sugestao - Para me dizer uma sugestão
+
+  utter_sugestao:
+    - text: |
+        Eu ainda estou em fase de testes e estou aprendendo com vocês, se você tem alguma sugestão de conteúdo 
+        me envia nesse email: contato@prioridadeabsoluta.org.br
+
+  utter_ajuda:
+    - text: |
+        Eu posso te enviar atualizações sobre as leis. Para isso posso te cadastrar, caso você escolha a opção #cadastrar.
+        Posso te #descadastrar, se você não quiser mais receber as minhas notificações.
+        E, posso te enviar as novidades que estão ocorrendo nas proposições de leis para Crianças e Adolescentes.
+        Todas que forem relevantes!
+        Posso também te falar um pouco do nosso trabalho na opção #sobrenos.
+        Você pode me dizer uma sugestão escolhendo a opção #sugestao
+
+  utter_sobrenos:
+    - text: |
+        O Prioridade Absoluta é um programa do Instituto Alana criado com a missão de dar efetividade e visibilidade 
+        ao Artigo 227 da Constituição Federal do Brasil, que estabelece os direitos e o melhor interesse de crianças 
+        e adolescentes como absoluta prioridade das famílias, da sociedade e do Estado. 
+        Para conhecer mais acesse o nosso site: https://prioridadeabsoluta.org.br/.
+
+  utter_novidades:
+    - text: |
+        Ah, que bom que você está interessando em ver as novidades de Leis para Crianças e Adolescentes.
+        Para que eu te envie as últimas tramitações. Preciso que você escreva #ultimas e ao final coloque 
+        a quantidade de tramitações que você deseja ler. Exemplo: #ultimas 2 
+
+  utter_notificacao:
+    - text: |
+        Estou muito animada com as novas atualizações!
+        Observe que uma sociedade em que o interesse da criança é prioridade, é um lugar melhor para todos :)
+
+  utter_despedir:
+    - text: |
+        Espero ter te ajudado a entender um pouco mais sobre as leis que podem ajudar as Crianças e Adolescentes.
+        Juntos podemos cuidar de quem precisa!
+        Até a próxima!
+
+  utter_continuar_conversa:
+    - text: |
+        E aí, qual nosso próximo assunto?
+
+  utter_cumprimentar:
+    - text: |
+        Oi eu vou te cumprimentar hahaha
+  
+  utter_start:
+    - text: |
+        Oi, eu sou a Alana, a Assistente Virtual do programa Prioridade Absoluta.
+        Estou aqui para te informar sobre as novidades das proposições de Leis para Crianças e Adolescentes.
+        Afinal, cuidar das crianças e dos adolescentes, é cuidar de todos nós!
+        Para conversar comigo basta escolher qual opção você prefere no momento
+        #cadastrar - Caso você deseje receber notificações sobre as novidades das Leis
+        #descadastrar - Para deixar de receber as notificações
+        #ajuda - Para entender como podemos interagir
+        #novidades - Para saber sobre as últimas novidades de Leis
+        #sobrenos - Para conhecer um pouco mais sobre o nosso trabalho
+        #sugestao - Para me dizer uma sugestão
+
+
+actions:
+  - utter_default
+  - utter_ajuda
+  - utter_cumprimentar
+  - utter_tudo_bem
+  - utter_sugestao
+  - utter_despedir
+  - utter_sobrenos
+  - utter_novidades
+  - utter_notificacao
+  - utter_start
+
+  - action_start
+  - action_descadastro
+  - action_cadastro
+  - action_ultimas
+  - action_menu
+  - action_voltar_menu

@@ -1,6 +1,5 @@
 from rasa_core_sdk import Action
-from .constants import TELEGRAM_TOKEN
-import telegram
+import logging
 
 
 class ActionMenu(Action):
@@ -12,16 +11,20 @@ class ActionMenu(Action):
             tracker_state = tracker.current_state()
             intent = tracker.latest_message['intent'].get('name')
             sender_id = tracker_state["sender_id"]
-            bot = telegram.Bot(token=TELEGRAM_TOKEN)
             reply_markup = self.build_menu(sender_id)
+            logging.info('#'*30)
+            logging.info(reply_markup)
+            logging.info('#'*30)
             if intent == 'ajuda':
-                bot.send_message(chat_id=sender_id,
-                                 text="Como posso te ajudar?",
-                                 reply_markup=reply_markup)
+                dispatcher.utter_custom_json({
+                    "text": "Como posso te ajudar?",
+                    "reply_markup": {"inline_keyboard": reply_markup}
+                })
             else:
-                bot.send_message(chat_id=sender_id,
-                                 text="O que você deseja?",
-                                 reply_markup=reply_markup)
+                dispatcher.utter_custom_json({
+                    "text": "O que você deseja?",
+                    "reply_markup": {"inline_keyboard": reply_markup}
+                })
         except Exception:
             dispatcher.utter_message(Exception)
         return []
@@ -32,13 +35,15 @@ class ActionMenu(Action):
                     '#sobrenos', '#novidades', '#sugestao']
         for cmd in commands:
             if cmd == '#sobrenos':
-                buttons.append(telegram.InlineKeyboardButton(
-                                text='sobre nos',
-                                callback_data=cmd))
+                buttons.append({
+                    "text": "sobre nos",
+                    "callback_data": cmd
+                })
             else:
-                buttons.append(telegram.InlineKeyboardButton(
-                                text=cmd.replace('#', ''),
-                                callback_data=cmd))
-        cmd_menu = [buttons[i:i+2] for i in range(0, len(buttons), 2)]
-        reply_markup = telegram.InlineKeyboardMarkup(cmd_menu)
+                buttons.append({
+                    "text":  cmd.replace('#', ''),
+                    "callback_data": cmd
+                })
+
+        reply_markup = [buttons[i:i+2] for i in range(0, len(buttons), 2)]
         return reply_markup

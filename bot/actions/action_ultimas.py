@@ -1,7 +1,6 @@
 from rasa_core_sdk import Action
 from pymongo import MongoClient, DESCENDING
-from .constants import TELEGRAM_DB_URI, TELEGRAM_TOKEN
-import telegram
+from .constants import TELEGRAM_DB_URI
 from rasa_core_sdk.events import SlotSet
 
 
@@ -11,18 +10,15 @@ class ActionUltimas(Action):
 
     def run(self, dispatcher, tracker, domain):
         try:
-            tracker_state = tracker.current_state()
-            sender_id = tracker_state["sender_id"]
             message = tracker.latest_message.get("text")
 
             client = MongoClient(TELEGRAM_DB_URI)
             db = client["bot"]
-            bot = telegram.Bot(token=TELEGRAM_TOKEN)
             projects = self.get_all_projects(db, int(message[-1]))
             for project in projects:
                 msg = (
                     "*{data}*\n"
-                    "[{sigla} {numero}/{ano}]({url_pl})\n"
+                    "[{sigla} {numero}/{ano} - {casa}]({url_pl})\n"
                     "_Ementa_: {ementa}\n"
                     "_Tramitação_: {tramitacao}".format(
                         data=project["data"],
@@ -30,16 +26,16 @@ class ActionUltimas(Action):
                         numero=str(project["numero"]),
                         ano=str(project["ano"]),
                         url_pl=project["urlPL"],
+                        casa=project["casa"],
                         ementa=project["ementa"],
                         tramitacao=project["tramitacao"],
                     )
                 )
-                bot.send_message(
-                    chat_id=sender_id,
-                    text=msg,
-                    parse_mode=telegram.ParseMode.MARKDOWN,
-                    disable_web_page_preview=True,
-                )
+                dispatcher.utter_custom_json({
+                    "text": msg,
+                    "parse_mode": "markdown",
+                    "disable_web_page_preview": "true"
+                })
         except ValueError:
             dispatcher.utter_message(ValueError)
         return [SlotSet('pl_number', int(message[-1]))]
