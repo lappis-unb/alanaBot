@@ -14,7 +14,7 @@ JSON_PALAVRAS_CHAVES = (
             os.path.dirname(os.path.abspath(__file__)) +
             "/palavras-chaves.json"
         )
-QTY_DAYS = 5
+QTY_DAYS = 1
 URL_API_SENADO = "http://legis.senado.leg.br/dadosabertos/"
 URL_WEB_SENADO = "https://www25.senado.leg.br/"
 es = Elasticsearch([os.getenv("ELASTICSEARCH_URL", "elasticsearch:9200")])

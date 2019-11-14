@@ -204,6 +204,9 @@ def get_dados_relator(projeto):
             dados_relator['NomeParlamentar'])
         json_relator["relator"]["sexo"] = (
             dados_relator['SexoParlamentar'])
+        json_relator["relator"]["siglaPartido"] = (
+            dados_relator['SiglaPartidoParlamentar']
+        )
         json_relator["relator"]["estado"] = {
             "uf": dados_relator['UfParlamentar'],
             "coord": {
