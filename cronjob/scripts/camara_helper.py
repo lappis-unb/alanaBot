@@ -309,10 +309,12 @@ def build_deputado_final(json_fields, url_deputado):
     --------
     dict -> all deputy data
     """
+    states_coord = constants.states_coord
     if url_deputado:
         req_deputado = utils.get_request(url_deputado)
         json_deputado = req_deputado.json()
         dados_deputado = json_deputado["dados"]
+        uf = dados_deputado["ultimoStatus"]["siglaUf"]
         dados_deputado = {
             json_fields["deputado"]: {
                 "id": dados_deputado["id"],
@@ -325,7 +327,13 @@ def build_deputado_final(json_fields, url_deputado):
                                                 f"{dados_deputado['id']}"),
                 "siglaPartido": dados_deputado["ultimoStatus"]["siglaPartido"],
                 "urlPartido": dados_deputado["ultimoStatus"]["uriPartido"],
-                "estado": dados_deputado["ultimoStatus"]["siglaUf"],
+                "estado": {
+                    "uf": uf,
+                    "coord": {
+                        "lat": states_coord[uf]["lat"],
+                        "lon": states_coord[uf]["lon"]
+                    }
+                },
                 "sexo": dados_deputado["sexo"]
             }
         }
@@ -425,3 +433,48 @@ def build_projeto_dict(json_projeto, ong_name):
     db_data.update(dados_deputado)
     db_data.update(dados_relator)
     return db_data
+
+
+def request_projeto(ids_projeto, palavras_chaves, ong_name):
+    """
+    Make pls requests and save them to database
+
+    Args
+    -------
+    ids_projeto:
+        list of integers -> list of integers with all pls ids
+    palavras_chaves:
+        list of strings -> All keywords from all subjects
+    ong_name:
+        str -> Ong name
+    """
+    req_id = constants.URL_API_CAMARA + "proposicoes/{}"
+    for id_projeto in ids_projeto:
+        request_str = req_id.format(id_projeto)
+        req_projeto = utils.get_request(request_str)
+        json_projeto = req_projeto.json()
+        descricao_situacao = (json_projeto["dados"]
+                                          ["statusProposicao"]
+                                          ["descricaoSituacao"])
+        ementa = json_projeto["dados"]["ementa"]
+        if descricao_situacao:  # if not None
+            if (constants.PL_ARQUIVADO != descricao_situacao
+                    and utils.search_keyword(ementa, palavras_chaves)):
+                db_data = build_projeto_dict(json_projeto,
+                                             ong_name)
+                el_data = db_data
+                utils.save_projeto_to_db(db_data)
+                pl_datetime = (datetime.datetime.strptime(
+                                el_data['data'],
+                                "%d/%m/%Y"))
+                el_data['data'] = datetime.datetime.strftime(
+                    pl_datetime, "%Y/%m/%d"
+                )
+                el_data['tags_ementa'] = utils.get_tags_from_string(ementa)
+                el_data['tags_tramitacao'] = utils.get_tags_from_string(
+                    db_data["tramitacao"]
+                )
+                del el_data['_id']
+                constants.es.index(index='projects',
+                                   doc_type='project',
+                                   body=el_data)

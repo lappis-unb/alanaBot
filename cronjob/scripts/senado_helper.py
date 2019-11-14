@@ -124,7 +124,12 @@ def get_dados_autor(json_projeto, projeto):
     json_autor = {
         "autor": {}
     }
+    states_coord = constants.states_coord
     try:
+        uf = (json_projeto['DetalheMateria']['Materia']
+                          ['Autoria']['Autor'][0]
+                          ['IdentificacaoParlamentar']
+                          ['UfParlamentar'])
         id_autor = (json_projeto['DetalheMateria']
                                 ['Materia']
                                 ['Autoria']
@@ -151,11 +156,15 @@ def get_dados_autor(json_projeto, projeto):
                         ['Autoria']['Autor'][0]
                         ['IdentificacaoParlamentar']
                         ['SexoParlamentar'])
-        json_autor["autor"]["estado"] = (
-            json_projeto['DetalheMateria']['Materia']
-                        ['Autoria']['Autor'][0]
-                        ['IdentificacaoParlamentar']
-                        ['UfParlamentar'])
+        json_autor["autor"]["estado"] = {
+            "uf": uf,
+            "coord": {
+                "lat": states_coord[uf]
+                                   ["lat"],
+                "lon": states_coord[uf]
+                                   ["lon"]
+            }
+        }
         json_autor["autor"]["siglaPartido"] = (
             json_projeto['DetalheMateria']['Materia']
                         ['Autoria']['Autor'][0]
@@ -174,17 +183,15 @@ def get_dados_autor(json_projeto, projeto):
 
 
 def get_dados_relator(projeto):
-    dados_relator = (utils.get_request(constants.URL_API_SENADO +
-                                       f"materia/relatorias/{projeto}?v=5")
-                     .json())
     json_relator = {
         "relator": {}
     }
-    try:
-        print(dados_relator)
-        dados_relator = (dados_relator['RelatoriaMateria']['Materia']
-                                      ['RelatoriaAtual']['Relator']
-                                      ['IdentificacaoParlamentar'])
+    states_coord = constants.states_coord
+
+    req_relator = get_relator_field(projeto)
+
+    if req_relator:
+        dados_relator = req_relator
         id_relator = (dados_relator['CodigoParlamentar'])
         url_api_senador = (constants.URL_API_SENADO +
                            f"senador/{id_relator}")
@@ -197,33 +204,44 @@ def get_dados_relator(projeto):
             dados_relator['NomeParlamentar'])
         json_relator["relator"]["sexo"] = (
             dados_relator['SexoParlamentar'])
-        json_relator["relator"]["estado"] = (
-            dados_relator['UfParlamentar'])
-        json_relator["relator"]["siglaPartido"] = (
-            dados_relator['SiglaPartidoParlamentar'])
+        json_relator["relator"]["estado"] = {
+            "uf": dados_relator['UfParlamentar'],
+            "coord": {
+                "lat": states_coord[dados_relator['UfParlamentar']]
+                                   ["lat"],
+                "lon": states_coord[dados_relator['UfParlamentar']]
+                                   ["lon"]
+            }
+        }
+    else:
+        json_relator["relator"] = None
+    return json_relator
+
+
+def get_relator_field(projeto):
+    req_relator = (utils.get_request(constants.URL_API_SENADO +
+                                     f"materia/relatorias/{projeto}?v=5")
+                   .json())
+    try:
+        dados_relator = (req_relator['RelatoriaMateria']['Materia']
+                                    ['RelatoriaAtual']['Relator']
+                                    ['IdentificacaoParlamentar'])
+    except TypeError:
+        dados_relator = (req_relator['RelatoriaMateria']['Materia']
+                                    ['RelatoriaAtual']['Relator'][0]
+                                    ['IdentificacaoParlamentar'])
     except KeyError:
         try:
-            json_relator = (dados_relator['RelatoriaMateria']['Materia']
-                                         ['HistoricoRelatoria']['Relator']
-                                         ['IdentificacaoParlamentar'])
-            id_relator = (dados_relator['CodigoParlamentar'])
-            url_api_senador = (constants.URL_API_SENADO +
-                               f"senador/{id_relator}")
-            json_relator["relator"]["id"] = id_relator
-            json_relator["relator"]["urlParlamentar"] = (
-                dados_relator['UrlPaginaParlamentar'])
-            json_relator["relator"]["urlApiParlamentar"] = url_api_senador
-            json_relator["relator"]["nome"] = (
-                dados_relator['NomeParlamentar'])
-            json_relator["relator"]["sexo"] = (
-                dados_relator['SexoParlamentar'])
-            json_relator["relator"]["estado"] = (
-                dados_relator['UfParlamentar'])
-            json_relator["relator"]["siglaPartido"] = (
-                dados_relator['SiglaPartidoParlamentar'])
+            dados_relator = (req_relator['RelatoriaMateria']['Materia']
+                                        ['HistoricoRelatoria']['Relator']
+                                        ['IdentificacaoParlamentar'])
+        except TypeError:
+            dados_relator = (dados_relator['RelatoriaMateria']['Materia']
+                                          ['HistoricoRelatoria']['Relator'][0]
+                                          ['IdentificacaoParlamentar'])
         except KeyError:
-            json_relator["relator"] = None
-    return json_relator
+            return None
+    return dados_relator
 
 
 def get_dados_pl(json_projeto, projeto, data_projeto, ong_name):
@@ -246,6 +264,16 @@ def get_dados_pl(json_projeto, projeto, data_projeto, ong_name):
 
     url_pl = (constants.URL_WEB_SENADO +
               f"web/atividade/materias/-/materia/{projeto}")
+    try:
+        situacao_pl = (json_projeto['DetalheMateria']['Materia']
+                                   ['SituacaoAtual']['Autuacoes']
+                                   ['Autuacao']['Situacao']
+                                   ['DescricaoSituacao'])
+    except TypeError:
+        situacoes = (json_projeto['DetalheMateria']['Materia']
+                                 ['SituacaoAtual']['Autuacoes'])
+        situacao_pl = (situacoes['Autuacao'][0]['Situacao']
+                                ['DescricaoSituacao'])
     dados_pl = {
         "ongName": ong_name,
         "ementa": json_projeto['DetalheMateria']
@@ -256,11 +284,7 @@ def get_dados_pl(json_projeto, projeto, data_projeto, ong_name):
                                                    ["Materia"]
                                                    ["IdentificacaoMateria"]
                                                    ["CodigoMateria"]),
-        "situacao": json_projeto['DetalheMateria']['Materia']
-                                ['SituacaoAtual']['Autuacoes']
-                                ['Autuacao']['Situacao']
-                                ['DescricaoSituacao'].lower()
-                                                     .capitalize(),
+        "situacao": situacao_pl.lower().capitalize(),
         "sigla": json_projeto['DetalheMateria']
                              ['Materia']
                              ['IdentificacaoMateria']
@@ -305,13 +329,20 @@ def save_senado_project(projetos, keywords, ong):
                           ['Materia']
                           ["DadosBasicosMateria"]
                           ["EmentaMateria"])
-        codigo_situacao_pl = (proj_req['DetalheMateria']['Materia']
-                                      ['SituacaoAtual']['Autuacoes']
-                                      ['Autuacao']['Situacao']
-                                      ['CodigoSituacao'])
+        try:
+            codigo_situacao_pl = (proj_req['DetalheMateria']['Materia']
+                                          ['SituacaoAtual']['Autuacoes']
+                                          ['Autuacao']['Situacao']
+                                          ['CodigoSituacao'])
+        except TypeError:
+            situacoes = (proj_req['DetalheMateria']['Materia']
+                                 ['SituacaoAtual']['Autuacoes'])
+            codigo_situacao_pl = (situacoes['Autuacao'][0]['Situacao']
+                                           ['CodigoSituacao'])
+
         situacao_arquivada = get_codigo_pl_arquivado()
         if (utils.search_keyword(ementa, keywords)
-                and codigo_situacao_pl != situacao_arquivada):
+                and situacao_arquivada != codigo_situacao_pl):
             json_autor = get_dados_autor(proj_req, id_projeto)
             dados_pl = get_dados_pl(proj_req,
                                     id_projeto,
@@ -320,9 +351,20 @@ def save_senado_project(projetos, keywords, ong):
             dados_relator = get_dados_relator(id_projeto)
             db_data.update(dados_pl)
             db_data.update(json_autor)
-            print(dados_relator)
             db_data.update(dados_relator)
-            save_projeto_to_db(db_data)
+            el_data = db_data
+            utils.save_projeto_to_db(db_data)
+            pl_datetime = (datetime.strptime(el_data['data'],
+                                             "%d/%m/%Y"))
+            el_data['data'] = datetime.strftime(pl_datetime, "%Y/%m/%d")
+            el_data['tags_ementa'] = utils.get_tags_from_string(ementa)
+            el_data['tags_tramitacao'] = utils.get_tags_from_string(
+                dados_pl["tramitacao"]
+            )
+            del el_data['_id']
+            constants.es.index(index='projects',
+                               doc_type='project',
+                               body=el_data)
 
 
 def crawl_tramitacao(proposicao_id):
@@ -364,17 +406,6 @@ def crawl_tramitacao(proposicao_id):
     except AttributeError:
         tramitacao = None
     return tramitacao
-
-
-def save_projeto_to_db(db_data):
-    """
-    Save data from pl, deputy and reporter to database
-    Args
-    -------
-    db_data:
-        dict -> all pl data
-    """
-    constants.DB.Project.insert_one(db_data)
 
 
 def main():
