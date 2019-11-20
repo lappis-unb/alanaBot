@@ -44,4 +44,6 @@ ADD /cronjob/crontab /etc/cron.d/update-projetos-cron
 RUN chmod 0644 /etc/cron.d/update-projetos-cron
 RUN crontab /etc/cron.d/update-projetos-cron
 
+RUN python -c "import nltk; nltk.download('stopwords');"
+
 CMD ["./entrypoint_cron.sh"]

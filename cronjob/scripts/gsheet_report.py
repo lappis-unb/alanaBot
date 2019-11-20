@@ -100,7 +100,7 @@ class GoogleSheetsReport():
             yesterday_pls[index]['relator']['nome']
         )
         casa_pl = yesterday_pls[index]['casa']
-        if casa_pl == 'Camara':
+        if casa_pl == 'Câmara':
             apreciacao = yesterday_pls[index]['apreciacao']
             apensados = yesterday_pls[index]['apensados']
             tramitacao = yesterday_pls[index]['regime']
@@ -125,13 +125,15 @@ class GoogleSheetsReport():
                                            ['siglaPartido']),
             'Estado Autor': (yesterday_pls[index]
                                           ['autor']
-                                          ['estado']),
+                                          ['estado']
+                                          ['uf']),
             'Relator': nome_relator,
             'Partido Relator': (yesterday_pls[index]
                                              ['relator']
                                              ['siglaPartido']),
             ' Estado Relator': (yesterday_pls[index]['relator']
-                                                    ['estado']),
+                                                    ['estado']
+                                                    ['uf']),
             'Apensados': apensados
         }
         return dict_query
