@@ -4,6 +4,8 @@ import time
 from requests.exceptions import ConnectionError
 import json
 import constants
+from functools import reduce
+from operator import getitem
 try:
     from nltk.corpus import stopwords
 except Exception:
@@ -144,3 +146,10 @@ def save_projeto_to_db(db_data):
         dict -> all pl data
     """
     constants.DB.Project.insert_one(db_data)
+
+
+def get_from_dict(key_list, dict_projeto):
+    try:
+        return reduce(getitem, key_list, dict_projeto)
+    except KeyError:
+        raise KeyError
