@@ -75,6 +75,7 @@ settings = {
                 'casa': {"type": "keyword"},
                 'tags_ementa': {"type": "keyword"},
                 'tags_tramitacao': {"type": "keyword"},
+                'keywords': {"type": "keyword"},
                 'autor': {
                     "properties": {
                         "id": {"type": "keyword"},

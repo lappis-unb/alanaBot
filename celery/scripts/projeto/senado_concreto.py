@@ -1,11 +1,12 @@
-from projects import Projeto
-import constants
-import utils
 from datetime import datetime
 import sys
 import re
-from parlamentar_senado import Senador
-from crawl_senado import CrawlSenado
+sys.path.append('../')
+from projeto.projects import Projeto  # noqa: E402
+from parlamentar.parlamentar_senado import Senador  # noqa: E402
+from crawler.crawl_senado import CrawlSenado  # noqa: E402
+import constants  # noqa: E402
+import utils  # noqa: E402
 
 
 class ProjetoSenado(Projeto):
@@ -290,16 +291,20 @@ class ProjetoSenado(Projeto):
                 db_data.update(dados_pl)
                 db_data.update(json_autor)
                 db_data.update(dados_relator)
-                # el_data = db_data
+                el_data = db_data
                 utils.save_projeto_to_db(db_data)
-                # pl_datetime = (datetime.strptime(el_data['data'],
-                #                                  "%d/%m/%Y"))
-                # el_data['data'] = datetime.strftime(pl_datetime, "%Y/%m/%d")
-                # el_data['tags_ementa'] = utils.get_tags_from_string(ementa)
-                # el_data['tags_tramitacao'] = utils.get_tags_from_string(
-                #     dados_pl["tramitacao"]
-                # )
-                # del el_data['_id']
-                # constants.es.index(index='projects',
-                #                    doc_type='project',
-                #                    body=el_data)
+                pl_datetime = (datetime.strptime(el_data['data'],
+                                                 "%d/%m/%Y"))
+                el_data['data'] = datetime.strftime(pl_datetime, "%Y/%m/%d")
+                el_data['tags_ementa'] = utils.get_tags_from_string(ementa)
+                el_data['tags_tramitacao'] = utils.get_tags_from_string(
+                    dados_pl["tramitacao"]
+                )
+                el_data['keywords'] = utils.get_ementa_keyword(
+                        keywords,
+                        ementa
+                )
+                del el_data['_id']
+                constants.es.index(index='projects',
+                                   doc_type='project',
+                                   body=el_data)

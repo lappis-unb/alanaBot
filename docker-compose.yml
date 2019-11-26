@@ -150,21 +150,32 @@ services:
     ports:
       - 27017:27017
 
-  # =============================== Cronjob =================================
-  cronjob:
-    container_name: cronjob-alana
+  # =============================== Celery =================================
+  celery: &celery
+    container_name: celery-alana
     build:
       context: .
-      dockerfile: ./docker/cronjob.Dockerfile
+      dockerfile: ./docker/celery.Dockerfile
     volumes:
         - ./outputs:/cronjob/home
     env_file:
       - env/bot-telegram.env
     depends_on:
         - database
-    stdin_open: true
-    tty: true
+        - rabbitmq
+        - elasticsearch
 
+  celery-beat:    
+    <<: *celery
+    container_name: celery-beat-alana
+    command: ["celery", "-A", "tasks", "beat", "-l", "info"]
+  
+  celery-worker:
+    <<: *celery
+    container_name: celery-worker-alana
+    depends_on:
+      - celery-beat
+    command: ["celery", "-A", "tasks", "worker", "-l", "info"]
 
 volumes:
   notebook_models:

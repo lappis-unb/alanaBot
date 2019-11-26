@@ -1,6 +1,8 @@
 from abc import ABC
-import constants
-import utils
+import sys
+sys.path.append('../')
+import constants  # noqa: E402
+import utils  # noqa: E402
 
 
 class Parlamentar(ABC):

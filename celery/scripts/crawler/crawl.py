@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup
 from abc import ABC
-import utils
+import sys
+sys.path.append('../')
+import utils  # noqa: E402
 
 
 class Crawl(ABC):

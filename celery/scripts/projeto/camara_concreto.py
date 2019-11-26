@@ -1,12 +1,13 @@
-from projects import Projeto
-import utils
-import constants
-from requests.utils import requote_uri
 import sys
+from requests.utils import requote_uri
 import datetime
 import re
-from parlamentar_camara import Deputado
-from crawl_camara import CrawlCamara
+sys.path.append('../')
+from projeto.projects import Projeto  # noqa: E402
+import utils  # noqa: E402
+import constants  # noqa: E402
+from parlamentar.parlamentar_camara import Deputado   # noqa: E402
+from crawler.crawl_camara import CrawlCamara   # noqa: E402
 
 
 class ProjetoCamara(Projeto):
@@ -221,6 +222,10 @@ class ProjetoCamara(Projeto):
                     el_data['tags_ementa'] = utils.get_tags_from_string(ementa)
                     el_data['tags_tramitacao'] = utils.get_tags_from_string(
                         db_data["tramitacao"]
+                    )
+                    el_data['keywords'] = utils.get_ementa_keyword(
+                        palavras_chaves,
+                        ementa
                     )
                     del el_data['_id']
                     constants.es.index(index='projects',

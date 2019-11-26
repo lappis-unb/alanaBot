@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 from functools import reduce
 from operator import getitem
-import constants
+import sys
+sys.path.append('../')
+import constants  # noqa: E402
 
 
 class Projeto(ABC):

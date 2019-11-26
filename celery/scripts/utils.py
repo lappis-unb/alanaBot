@@ -23,6 +23,14 @@ def search_keyword(search_string, keywords_list):
         return False
 
 
+def get_ementa_keyword(keywords, ementa_string):
+    string_keywords = []
+    for keyword in keywords:
+        if keyword.lower() in ementa_string.lower():
+            string_keywords.append(keyword)
+    return string_keywords
+
+
 def can_connect(request_str):
     try:
         headers = {

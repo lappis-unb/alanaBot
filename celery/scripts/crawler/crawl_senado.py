@@ -1,5 +1,7 @@
-from crawl import Crawl
-import constants
+import sys
+sys.path.append('../')
+from crawler.crawl import Crawl  # noqa: E402
+import constants  # noqa: E402
 
 
 class CrawlSenado(Crawl):

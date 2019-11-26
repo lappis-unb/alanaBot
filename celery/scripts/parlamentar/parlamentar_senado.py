@@ -1,6 +1,8 @@
-from parlamentar import Parlamentar
-import constants
-import utils
+import sys
+sys.path.append('../')
+from parlamentar.parlamentar import Parlamentar  # noqa: E402
+import constants  # noqa: E402
+import utils  # noqa: E402
 
 
 class Senador(Parlamentar):
