@@ -76,18 +76,18 @@ class Deputado(Parlamentar):
         --------
         string -> camara api url for deputy request
         """
+        proposicao = str(json_projeto["dados"]["id"])
         if relator:
             url_deputado = (json_projeto["dados"]
                                         ["statusProposicao"]
                                         ["uriUltimoRelator"])
         else:
-            proposicao = str(json_projeto["dados"]["id"])
             url_autores_pl = (constants.URL_API_CAMARA +
                               f"proposicoes/{proposicao}/autores")
             req_autores_pl = utils.get_request(url_autores_pl)
             json_autores_pl = req_autores_pl.json()
             url_deputado = json_autores_pl["dados"][0]["uri"]
-        return url_deputado
+        return url_deputado, proposicao
 
     def get_json_fields(self, relator=False):
         """
@@ -132,8 +132,9 @@ class Deputado(Parlamentar):
         dict -> all deputy data
         """
         states_coord = constants.states_coord
-        if url_deputado:
-            req_deputado = utils.get_request(url_deputado)
+        proposicao = url_deputado[1]
+        if url_deputado[0]:
+            req_deputado = utils.get_request(url_deputado[0])
             json_deputado = req_deputado.json()
             dados_deputado = json_deputado["dados"]
             uf = utils.get_from_dict(
@@ -168,10 +169,16 @@ class Deputado(Parlamentar):
                 }
             }
         else:
+            url_autores_pl = (constants.URL_API_CAMARA +
+                              f"proposicoes/{proposicao}/autores")
+            dados_autores = utils.get_request(url_autores_pl).json()
+            print('A'*30)
+            print(dados_autores)
+            print('A'*30)
             dados_deputado = {
                 json_fields["deputado"]: {
                     "id": None,
-                    "nome": None,
+                    "nome": dados_autores["dados"][0]["nome"],
                     "siglaPartido": None,
                     "estado": None,
                     "sexo": None,

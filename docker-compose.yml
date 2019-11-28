@@ -168,14 +168,16 @@ services:
   celery-beat:    
     <<: *celery
     container_name: celery-beat-alana
-    command: ["celery", "-A", "tasks", "beat", "-l", "info"]
+    command: ["celery", "-A", "tasks", "beat", 
+              "--app", "tasks.celeryapp", "-l", "info"]
   
   celery-worker:
     <<: *celery
     container_name: celery-worker-alana
     depends_on:
       - celery-beat
-    command: ["celery", "-A", "tasks", "worker", "-l", "info"]
+    command: ["celery", "-A", "tasks", "worker",
+              "--app", "tasks.celeryapp", "-l", "info"]
 
 volumes:
   notebook_models:

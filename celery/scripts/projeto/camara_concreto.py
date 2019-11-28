@@ -70,7 +70,6 @@ class ProjetoCamara(Projeto):
                                            ultima_pagina_request)))
 
         except IndexError:
-            print('NÃO TEM PL')
             sys.exit(1)
         else:
             return {"request": last_page_url,
@@ -306,6 +305,9 @@ class ProjetoCamara(Projeto):
         json_fields_relator = dep.get_json_fields(True)
         json_fields_deputado = dep.get_json_fields(False)
 
+        print('#'*30)
+        print(url_deputado)
+        print('#'*30)
         dados_deputado = dep.build_deputado_final(json_fields_deputado,
                                                   url_deputado)
         dados_relator = dep.build_deputado_final(json_fields_relator,

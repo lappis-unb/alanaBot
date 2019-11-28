@@ -2,6 +2,9 @@ FROM python:3.7-slim
 
 WORKDIR /celery
 
+ENV TZ=America/Sao_Paulo
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 ADD ./docker/celery.requirements.txt /celery/celery.requirements.txt
 
 RUN pip install -r celery.requirements.txt

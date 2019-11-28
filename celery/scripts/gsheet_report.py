@@ -89,6 +89,13 @@ class GoogleSheetsReport():
         else:
             return field
 
+    def return_none_if_not_exists(self, field):
+        try:
+            if field:
+                return field
+        except TypeError:
+            return None
+
     def build_result(self, yesterday_pls, index, header):
         dict_query = dict.fromkeys(list(header.keys()), 0)
         nome_autor = self.check_field_exists(
@@ -108,6 +115,20 @@ class GoogleSheetsReport():
             apreciacao = None
             apensados = None
             tramitacao = yesterday_pls[index]['tramitacao']
+        try:
+            uf_autor = (yesterday_pls[index]
+                                     ['autor']
+                                     ['estado']
+                                     ['uf'])
+        except TypeError:
+            uf_autor = None
+        try:
+            uf_relator = (yesterday_pls[index]
+                                       ['relator']
+                                       ['estado']
+                                       ['uf'])
+        except TypeError:
+            uf_relator = None
         dict_query = {
             'Proposição': self.format_hyperlink(
                             yesterday_pls[index]['urlPL'],
@@ -123,17 +144,12 @@ class GoogleSheetsReport():
             'Partido Autor': (yesterday_pls[index]
                                            ['autor']
                                            ['siglaPartido']),
-            'Estado Autor': (yesterday_pls[index]
-                                          ['autor']
-                                          ['estado']
-                                          ['uf']),
+            'Estado Autor': uf_autor,
             'Relator': nome_relator,
             'Partido Relator': (yesterday_pls[index]
                                              ['relator']
                                              ['siglaPartido']),
-            ' Estado Relator': (yesterday_pls[index]['relator']
-                                                    ['estado']
-                                                    ['uf']),
+            ' Estado Relator': uf_relator,
             'Apensados': apensados
         }
         return dict_query
@@ -192,7 +208,7 @@ class GoogleSheetsReport():
 
     def format_sheet(self, sheet, template_sheet):
         sheet_data = sheet.get_all_values()
-        rows_num = gs.get_sheet_rows_num(sheet)
+        rows_num = self.get_sheet_rows_num(sheet)
         header = sheet_data[0]
         for cell in header:
             col_formatting = self.get_col_formatting(template_sheet, cell)
@@ -295,18 +311,18 @@ class GoogleSheetsReport():
             logger.error(ValueError)
         return sheet
 
-    def write_sheet_report(self, template_header_formatting):
+    def write_sheet_report(self, template_sheet, template_header_formatting):
         ongs = self.DB.Ong.find({})
         for ong in ongs:
             sheet = self.connect_sheet_by_name(ong["Name"])
             yesterday_pls = self.get_yesterday_pls(ong["Name"])
-            gs.write_header(sheet, template_header_formatting)
-            rows_num = gs.get_sheet_rows_num(sheet)
-            gs.write_pls_report(yesterday_pls, rows_num, sheet,
-                                template_sheet, template_header_formatting)
-            gs.format_sheet(sheet, template_sheet)
-            gs.conditional_format_sheet(sheet, template_sheet,
-                                        template_header_formatting)
+            self.write_header(sheet, template_header_formatting)
+            rows_num = self.get_sheet_rows_num(sheet)
+            self.write_pls_report(yesterday_pls, rows_num, sheet,
+                                  template_sheet, template_header_formatting)
+            self.format_sheet(sheet, template_sheet)
+            self.conditional_format_sheet(sheet, template_sheet,
+                                          template_header_formatting)
 
 
 if __name__ == "__main__":
@@ -318,4 +334,4 @@ if __name__ == "__main__":
     template_header_formatting = gs.get_template_header_formatting(
         template_sheet
     )
-    gs.write_sheet_report(template_header_formatting)
+    gs.write_sheet_report(template_sheet, template_header_formatting)

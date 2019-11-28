@@ -174,7 +174,6 @@ class ProjetoSenado(Projeto):
                                      ['SituacaoAtual']['Autuacoes'])
             situacao_pl = (situacoes['Autuacao'][0]['Situacao']
                                     ['DescricaoSituacao'])
-        print('ANTES DO DADOS PL')
 
         dados_pl = {
             "ongName": ong_name,

@@ -171,9 +171,6 @@ class Senador(Parlamentar):
                 json_projeto
             )
         except KeyError:
-            print('AHAHAHAHAHAHAHAH')
-            print(json_projeto)
-            print('AHAHAHAHAHAHAHAH')
             json_autor["autor"]["nome"] = utils.get_from_dict(
                 ['DetalheMateria', 'Materia',
                  'Autoria', 'Autor', 0,

@@ -1,29 +1,23 @@
 # -*- coding: utf-8 -*-
-from pymongo import MongoClient
 import os
 import telegram
 import datetime
+import constants
 
 day_of_week = {
     "dom": 6
 }
+db = constants.DB
 
 
-def connect_to_db():
-    TELEGRAM_DB_URI = os.getenv("TELEGRAM_DB_URI", "")
-    client = MongoClient(TELEGRAM_DB_URI)
-    db = client["bot"]
-    return db
-
-
-def get_registered_users(db):
+def get_registered_users():
     users = db["User"]
     query = {"registered": True}
     registered_users = users.find(query)
     return registered_users
 
 
-def get_yesterday_pls(db):
+def get_yesterday_pls():
     yesterday = datetime.date.today() - datetime.timedelta(days=1)
     weekday = yesterday.weekday()
     if weekday == day_of_week["dom"]:  # if it's monday get friday pls
@@ -73,7 +67,6 @@ def send_notification(registered_users, pls):
 
 
 if __name__ == "__main__":
-    db = connect_to_db()
-    registered_users = get_registered_users(db)
-    yesterday_pls = get_yesterday_pls(db)
+    registered_users = get_registered_users()
+    yesterday_pls = get_yesterday_pls()
     send_notification(registered_users, yesterday_pls)
