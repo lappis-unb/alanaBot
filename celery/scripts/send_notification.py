@@ -41,7 +41,7 @@ def send_notification(registered_users, pls):
         for i, _ in enumerate(pls):
             message = (
                 "*{data}*\n"
-                "[{sigla} {numero}/{ano}]({url_pl})\n"
+                "[{sigla} {numero}/{ano} - {casa}]({url_pl})\n"
                 "_Ementa_: {ementa}\n"
                 "_Tramitação_: {tramitacao}".format(
                     data=pls[i]["data"],
@@ -49,6 +49,7 @@ def send_notification(registered_users, pls):
                     numero=str(pls[i]["numero"]),
                     ano=str(pls[i]["ano"]),
                     url_pl=pls[i]["urlPL"],
+                    casa=pls[i]["casa"],
                     ementa=pls[i]["ementa"],
                     tramitacao=pls[i]["tramitacao"],
                 )
