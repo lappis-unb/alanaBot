@@ -159,7 +159,7 @@ services:
     volumes:
         - ./outputs:/cronjob/home
     env_file:
-      - env/bot-telegram.env
+      - env/celery.env
     depends_on:
         - database
         - rabbitmq
