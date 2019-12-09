@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import constants
-from camara_concreto import ProjetoCamara
-from senado_concreto import ProjetoSenado
+from projeto.camara_concreto import ProjetoCamara
+from projeto.senado_concreto import ProjetoSenado
 
 
 def seed_db():

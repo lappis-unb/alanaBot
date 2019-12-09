@@ -18,13 +18,6 @@ class ProjetoCamara(Projeto):
         self.campos_banco = self.get_campos_banco()
 
     def get_campos_banco(self):
-        # campos_banco["ongName"] = ong_name
-        # campos_banco["data"] = ['data']
-        # campos_banco["urlPL"] = url_pl
-        # campos_banco["casa"] = casa_projeto
-        # campos_banco["apreciacao"] = None
-        # campos_banco["apensados"] = None
-
         campos_banco = self.campos_projeto
         campos_banco["ongName"] = None
         campos_banco["ementa"] = ["dados", "ementa"]
@@ -70,7 +63,7 @@ class ProjetoCamara(Projeto):
                                            ultima_pagina_request)))
 
         except IndexError:
-            sys.exit(1)
+            return
         else:
             return {"request": last_page_url,
                     "page": last_page}
@@ -119,18 +112,20 @@ class ProjetoCamara(Projeto):
         projetos_json = utils.get_request(encoded_url).json()
 
         page_req = self.ultima_pagina_requisicao(projetos_json)
-
-        last_page = page_req["page"]
-        last_page_req = page_req["request"]
-
-        request_projetos = self.ultimo_get_requests(last_page,
-                                                    last_page_req)
-        for proj_req in request_projetos:
-            get_request = utils.get_request(proj_req)
-            json_projeto = get_request.json()
-            for projeto in json_projeto["dados"]:
-                ids_projetos.append(projeto["id"])
-        return ids_projetos
+        try:
+            last_page = page_req["page"]
+            last_page_req = page_req["request"]
+        except TypeError:
+            return
+        else:
+            request_projetos = self.ultimo_get_requests(last_page,
+                                                        last_page_req)
+            for proj_req in request_projetos:
+                get_request = utils.get_request(proj_req)
+                json_projeto = get_request.json()
+                for projeto in json_projeto["dados"]:
+                    ids_projetos.append(projeto["id"])
+            return ids_projetos
 
     def build_pls_request_url(self, list_palavras_chaves):
         """
@@ -178,6 +173,11 @@ class ProjetoCamara(Projeto):
             }
         """
         start_date = datetime.date.today()
+        yesterday = datetime.date.today() - datetime.timedelta(days=1)
+        weekday = yesterday.weekday()
+        if weekday == self.day_of_week["dom"]:  # if it's monday get friday pls
+            start_date = datetime.date.today() - datetime.timedelta(days=2)
+
         final_date = start_date - datetime.timedelta(days=self.dias_requisicao)
         start_date_str = start_date.strftime("%Y-%m-%d")
         final_date_str = final_date.strftime("%Y-%m-%d")
@@ -197,39 +197,45 @@ class ProjetoCamara(Projeto):
             str -> Ong name
         """
         req_id = constants.URL_API_CAMARA + "proposicoes/{}"
-        for id_projeto in ids_projeto:
-            request_str = req_id.format(id_projeto)
-            req_projeto = utils.get_request(request_str)
-            json_projeto = req_projeto.json()
-            descricao_situacao = (json_projeto["dados"]
-                                              ["statusProposicao"]
-                                              ["descricaoSituacao"])
-            ementa = json_projeto["dados"]["ementa"]
-            if descricao_situacao:  # if not None
-                if (constants.PL_ARQUIVADO != descricao_situacao
-                        and utils.search_keyword(ementa, palavras_chaves)):
-                    db_data = self.build_projeto_dict(json_projeto,
-                                                      ong_name)
-                    el_data = db_data
-                    utils.save_projeto_to_db(db_data)
-                    pl_datetime = (datetime.datetime.strptime(
-                                    el_data['data'],
-                                    "%d/%m/%Y"))
-                    el_data['data'] = datetime.datetime.strftime(
-                        pl_datetime, "%Y/%m/%d"
-                    )
-                    el_data['tags_ementa'] = utils.get_tags_from_string(ementa)
-                    el_data['tags_tramitacao'] = utils.get_tags_from_string(
-                        db_data["tramitacao"]
-                    )
-                    el_data['keywords'] = utils.get_ementa_keyword(
-                        palavras_chaves,
-                        ementa
-                    )
-                    del el_data['_id']
-                    constants.es.index(index='projects',
-                                       doc_type='project',
-                                       body=el_data)
+        try:
+            for id_projeto in ids_projeto:
+                request_str = req_id.format(id_projeto)
+                req_projeto = utils.get_request(request_str)
+                json_projeto = req_projeto.json()
+                descricao_situacao = (json_projeto["dados"]
+                                                  ["statusProposicao"]
+                                                  ["descricaoSituacao"])
+                ementa = json_projeto["dados"]["ementa"]
+                if descricao_situacao:  # if not None
+                    if (constants.PL_ARQUIVADO != descricao_situacao
+                            and utils.search_keyword(ementa, palavras_chaves)):
+                        db_data = self.build_projeto_dict(json_projeto,
+                                                          ong_name)
+                        el_data = db_data
+                        utils.save_projeto_to_db(db_data)
+                        pl_datetime = (datetime.datetime.strptime(
+                                        el_data['data'],
+                                        "%d/%m/%Y"))
+                        el_data['data'] = datetime.datetime.strftime(
+                            pl_datetime, "%Y/%m/%d"
+                        )
+                        el_data['tags_ementa'] = utils.get_tags_from_string(
+                            ementa
+                        )
+                        el_data['tags_tramitacao'] = (
+                            utils.get_tags_from_string(
+                                db_data["tramitacao"])
+                        )
+                        el_data['keywords'] = utils.get_ementa_keyword(
+                            palavras_chaves,
+                            ementa
+                        )
+                        del el_data['_id']
+                        constants.es.index(index='projects',
+                                           doc_type='project',
+                                           body=el_data)
+        except TypeError:
+            return
 
     def build_db_data(self, json_projeto, ong_name,
                       pl_date, url_camara):
@@ -305,9 +311,6 @@ class ProjetoCamara(Projeto):
         json_fields_relator = dep.get_json_fields(True)
         json_fields_deputado = dep.get_json_fields(False)
 
-        print('#'*30)
-        print(url_deputado)
-        print('#'*30)
         dados_deputado = dep.build_deputado_final(json_fields_deputado,
                                                   url_deputado)
         dados_relator = dep.build_deputado_final(json_fields_relator,

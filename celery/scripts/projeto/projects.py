@@ -20,6 +20,9 @@ class Projeto(ABC):
             "urlPL": None,
             "casa": None
         }
+        self.day_of_week = {
+            "dom": 6
+        }
         self.dias_requisicao = constants.QTY_DAYS
         if (self.api_url is None and self.web_url is None
                 and self.campos_banco is None):

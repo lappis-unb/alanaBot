@@ -1,4 +1,5 @@
 from datetime import datetime
+from datetime import date, timedelta
 import sys
 import re
 sys.path.append('../')
@@ -80,10 +81,16 @@ class ProjetoSenado(Projeto):
         projetos = []
         try:
             for codigo in keywords:
+                yesterday = date.today() - timedelta(days=1)
+                weekday = yesterday.weekday()
+                days_const = 1
+                # if it's monday get friday pls
+                if weekday == self.day_of_week["dom"]:
+                    days_const = 3
                 req = utils.get_request(
                     self.api_url + "materia/atualizadas?"
                     f"codAssuntoEspecifico={codigo}&numdias="
-                    f"{self.dias_requisicao + 1}"
+                    f"{self.dias_requisicao + days_const}"
                 ).json()
                 materias = (req['ListaMateriasAtualizadas']
                             ['Materias']
