@@ -18,7 +18,7 @@ class GoogleForms():
             "dom": 6
         }
 
-    def connect_sheet(self):
+    def connect_sheet(self, name):
         scope = ['https://www.googleapis.com/auth/spreadsheets']
         try:
             creds = ServiceAccountCredentials\
@@ -29,7 +29,7 @@ class GoogleForms():
             logger.error(ValueError)
         try:
             sheet = client.open_by_key(self.sheet_id)
-            sheet = sheet.worksheet("Respostas ao formulário 1")
+            sheet = sheet.worksheet(name)
         except ValueError:
             logger.error(ValueError)
         return sheet
@@ -67,7 +67,7 @@ class GoogleForms():
 
 if __name__ == "__main__":
     gs = GoogleForms(constants.SHEET_ID)
-    sheet = gs.connect_sheet()
+    sheet = gs.connect_sheet("Respostas ao formulário 1")
     ongs = gs.get_column_values(sheet, 1)
     palavras_chaves = gs.get_column_values(sheet, 2)
     palavras_formatadas = gs.format_palavras_chaves(ongs, palavras_chaves)

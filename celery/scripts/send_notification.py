@@ -5,7 +5,7 @@ import datetime
 import constants
 
 day_of_week = {
-    "dom": 6
+    "dom": 6,
 }
 db = constants.DB
 
