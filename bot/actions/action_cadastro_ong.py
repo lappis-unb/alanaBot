@@ -2,9 +2,6 @@ from rasa_core_sdk import Action
 from pymongo import MongoClient
 from .constants import TELEGRAM_DB_URI, TELEGRAM_API_URL
 import requests
-from rasa_core_sdk.events import SlotSet
-
-# logger = logging.getLogger(__name__)
 
 
 class ActionCadastroOng(Action):

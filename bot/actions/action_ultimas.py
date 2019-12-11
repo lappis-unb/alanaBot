@@ -11,10 +11,12 @@ class ActionUltimas(Action):
     def run(self, dispatcher, tracker, domain):
         try:
             message = tracker.latest_message.get("text")
+            tracker_state = tracker.current_state()
+            sender_id = tracker_state["sender_id"]
 
             client = MongoClient(TELEGRAM_DB_URI)
             db = client["bot"]
-            projects = self.get_all_projects(db, int(message[-1]))
+            projects = self.get_all_projects(sender_id, db, int(message[-1]))
             for project in projects:
                 msg = (
                     "*{data}*\n"
@@ -40,12 +42,28 @@ class ActionUltimas(Action):
             dispatcher.utter_message(ValueError)
         return [SlotSet('pl_number', int(message[-1]))]
 
-    def get_all_projects(self, db, number_of_projects):
+    def get_user_ong(self, sender_id, db):
+        users_collection = db["User"]
+        query = {"sender_id": sender_id}
+        user = users_collection.find(query)
+        user_ong = user[0]["ong"]
+        if user_ong:
+            return user_ong
+        else:
+            return None
+
+    def get_all_projects(self, sender_id, db, number_of_projects):
         projects_to_send = []
         project_collection = db["Project"]
-        projects = project_collection.find({})\
-                                     .sort("data",
-                                           DESCENDING)
+        user_ong = self.get_user_ong(sender_id, db)
+        if user_ong:
+            projects = (project_collection.find({
+                "ongName": user_ong
+            }).sort("data", DESCENDING))
+        else:
+            projects = project_collection.find({})\
+                                        .sort("data",
+                                              DESCENDING)
         for i, project in enumerate(projects, start=1):
             if i <= number_of_projects:
                 projects_to_send.append(project)

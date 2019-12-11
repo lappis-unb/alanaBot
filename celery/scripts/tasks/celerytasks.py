@@ -1,9 +1,7 @@
 import telegram
 import sys
 import os
-from celery.schedules import crontab
 import datetime
-# from celery import add_periodic_task
 import logging
 sys.path.append('../')
 from tasks.celeryapp import app  # noqa: E402
@@ -69,9 +67,8 @@ def seed_google_forms():
 
 @app.task
 def send_notification():
-    registered_users = notification.get_registered_users()
     yesterday_pls = notification.get_yesterday_pls()
-    notification.send_notification(registered_users, yesterday_pls)
+    notification.send_notification(yesterday_pls)
 
 
 @app.task
