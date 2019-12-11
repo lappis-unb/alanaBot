@@ -43,7 +43,8 @@ def get_registered_users(ong):
 
 def send_notification(pls):
     bot = telegram.Bot(token=os.getenv("TELEGRAM_TOKEN", ""))
-    notification_msg = "Estou muito animada com as novas atualizações!\n"\
+    notification_msg = "Essas são as atualizações em projetos de lei a "\
+                       "respeito de crianças e adolescentes.\n"\
                        "Observe que uma sociedade em que o interesse da "\
                        "criança é prioridade, é um lugar melhor "\
                        "para todos :)"

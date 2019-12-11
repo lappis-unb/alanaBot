@@ -64,6 +64,7 @@ templates:
         #novidades - Para saber sobre as últimas novidades de Leis
         #sobrenos - Para conhecer um pouco mais sobre o nosso trabalho
         #sugestao - Para me dizer uma sugestão
+        #palavrachave - Para configurar as palavras chaves utiizadas nas novidades das Leis
 
   utter_sugestao:
     - text: |
@@ -94,7 +95,7 @@ templates:
 
   utter_notificacao:
     - text: |
-        Estou muito animada com as novas atualizações!
+        Essas são as atualizações em projetos de lei a respeito de crianças e adolescentes.
         Observe que uma sociedade em que o interesse da criança é prioridade, é um lugar melhor para todos :)
 
   utter_despedir:
@@ -123,6 +124,7 @@ templates:
         #novidades - Para saber sobre as últimas novidades de Leis
         #sobrenos - Para conhecer um pouco mais sobre o nosso trabalho
         #sugestao - Para me dizer uma sugestão
+        #palavrachave - Para configurar as palavras chaves utiizadas nas novidades das Leis
 
 
 actions:
