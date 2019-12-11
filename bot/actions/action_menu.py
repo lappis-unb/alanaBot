@@ -31,13 +31,18 @@ class ActionMenu(Action):
 
     def build_menu(self, sender_id):
         buttons = []
-        commands = ['#cadastrar', '#descadastrar',
+        commands = ['#cadastrar', '#palavrachave', '#descadastrar',
                     '#sobrenos', '#novidades', '#sugestao']
         for cmd in commands:
             if cmd == '#sobrenos':
                 buttons.append({
                     "text": "sobre nos",
                     "callback_data": cmd
+                })
+            elif cmd == '#palavrachave':
+                buttons.append({
+                    "text": "palavras chaves",
+                    "callback_data": "/action_palavrachave"
                 })
             else:
                 buttons.append({

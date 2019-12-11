@@ -2,6 +2,7 @@ import telegram
 import sys
 import os
 from celery.schedules import crontab
+import datetime
 # from celery import add_periodic_task
 import logging
 sys.path.append('../')
@@ -73,48 +74,32 @@ def send_notification():
     notification.send_notification(registered_users, yesterday_pls)
 
 
-@app.on_after_finalize.connect
-def setup_periodic_tasks(sender, **kwargs):
-    gs = GoogleForms(constants.SHEET_ID)
-    sheet = gs.connect_sheet("Respostas ao formulário 4")
-    scheduled_hour = gs.get_column_values(sheet, 3)
-    notification_freq = gs.get_column_values(sheet, 4)
-    notification_days = gs.get_column_values(sheet, 5)
-    msgs = gs.get_column_values(sheet, 1)
-
-    for i in range(len(scheduled_hour)):
-        notification_hour = scheduled_hour[i].split(':')
-        days_of_week = 'mon,tue,'\
-                       'wed,thu,'\
-                       'fri'
-        if notification_freq == "Semanalmente":
-            notification_days_split = notification_days[i].split(',')
-            splitted_days = [day.lstrip() for day in notification_days_split]
-            formatted_days_list = [day_of_week[day] for day in splitted_days]
-            days_of_week = ','.join(str(day) for day in formatted_days_list)
-        sender.add_periodic_task(
-            crontab(hour=notification_hour[0],
-                    minute=notification_hour[1],
-                    day_of_week=days_of_week),
-            newsletter_notification.s(msgs[i])
-        )
-
-
 @app.task
-def newsletter_notification(msg):
+def newsletter_notification():
     gs = GoogleForms(constants.SHEET_ID)
-    sheet = gs.connect_sheet("Respostas ao formulário 4")
+    sheet = gs.connect_sheet("Respostas ao formulário 6")
     ongs = gs.get_column_values(sheet, 2)
+    msgs = gs.get_column_values(sheet, 1)
+    notification_dates = gs.get_column_values(sheet, 3)
     db = constants.DB
+    msgs_index = []
+    today = datetime.datetime.today()
+    str_today = datetime.datetime.strftime(today, "%d/%m/%Y")
     for i in range(len(ongs)):
         users = db["User"]
         query = {"registered": True, "ong": ongs[i]}
-        registered_users = users.find(query)
-    for user in registered_users:
-        bot = telegram.Bot(token=os.getenv("TELEGRAM_TOKEN", ""))
-        bot.send_message(
-            chat_id=user["sender_id"],
-            text=msg,
-            parse_mode=telegram.ParseMode.MARKDOWN,
-            disable_web_page_preview=True,
-        )
+        if users.count_documents(query):
+            registered_users = users.find(query)
+            msgs_index.append(i)
+    try:
+        for i, user in enumerate(registered_users):
+            if str_today == notification_dates[msgs_index[i]]:
+                bot = telegram.Bot(token=os.getenv("TELEGRAM_TOKEN", ""))
+                bot.send_message(
+                    chat_id=user["sender_id"],
+                    text=msgs[msgs_index[i]],
+                    parse_mode=telegram.ParseMode.MARKDOWN,
+                    disable_web_page_preview=True,
+                )
+    except UnboundLocalError:
+        return

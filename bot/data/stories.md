@@ -14,6 +14,26 @@
   - action_start
   - action_menu
 
+<!-- ## action_palavrachave
+* palavrachave
+  - action_palavrachave -->
+
+## action_palavrachave
+* action_palavrachave{"palavrachave":"#palavrachave"}
+  - action_palavrachave
+
+<!-- ## action_cadastro_ong
+* palavrachave
+  - action_palavrachave
+* action_cadastro_ong{"ong_regex":"#ong teste"}
+  - action_cadastro_ong -->
+
+## action_cadastro_ong
+* action_palavrachave{"palavrachave":"#palavrachave"}
+  - action_palavrachave
+* action_cadastro_ong{"ong_regex":"#ong teste"}
+  - action_cadastro_ong
+
 ## action_start+sugestao
 * start
   - utter_start

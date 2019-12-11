@@ -255,3 +255,23 @@
 ## intent:ultimas
 - #ultimas 2
 - #ultimas 6
+
+## regex:ong_regex
+- ^(#|\/|)ong \w+
+
+## intent:ong
+- [/ong](ong_regex) teste
+- [#ong](ong_regex) alana
+- [ong](ong_regex) novaong
+
+## regex:palavrachave_regex
+- ^(#|\/|)palavrachave
+
+## intent:palavrachave
+- [/palavrachave](palavrachave_regex)
+- [#palavrachave](palavrachave_regex)
+- [palavrachave](palavrachave_regex) 
+- quero cadastrar palavras chaves
+- cadastro de palavras chaves
+- palavras chaves
+- palavra chave por favor

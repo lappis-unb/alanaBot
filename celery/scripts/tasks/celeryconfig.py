@@ -47,4 +47,12 @@ beat_schedule = {
                                         'fri'),
         'args': ()
     },
+    'newsletter_notification': {
+        'task': 'tasks.celerytasks.newsletter_notification',
+        'schedule': crontab(hour=22, minute=43,
+                            day_of_week='mon,tue,'
+                                        'wed,thu,'
+                                        'fri'),
+        'args': ()
+    },
 }

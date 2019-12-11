@@ -11,6 +11,7 @@ intents:
   - novidades
   - start
   - ultimas
+  - palavrachave
 
   - action_descadastro
   - action_cadastro
@@ -18,6 +19,8 @@ intents:
   - action_ultimas
   - action_menu
   - action_voltar_menu
+  - action_palavrachave
+  - action_cadastro_ong
 
 entities:
   - command
@@ -26,6 +29,8 @@ entities:
   - descadastro
   - sobrenos
   - novidades
+  - ong
+  - palavrachave_regex
 
 slots:
   ultimas:
@@ -104,7 +109,7 @@ templates:
 
   utter_cumprimentar:
     - text: |
-        Oi eu vou te cumprimentar hahaha
+        Oi, eu sou a Alana, a Assistente Virtual do programa Prioridade Absoluta.
   
   utter_start:
     - text: |
@@ -138,3 +143,5 @@ actions:
   - action_ultimas
   - action_menu
   - action_voltar_menu
+  - action_palavrachave
+  - action_cadastro_ong
