@@ -140,18 +140,20 @@ class Deputado(Parlamentar):
             uf = utils.get_from_dict(
                         self.campos_deputado["estado"]["uf"],
                         json_deputado)
+            id_parlamentar = utils.get_from_dict(self.campos_deputado["id"],
+                                                 json_deputado)
             dados_deputado = {
                 json_fields["deputado"]: {
-                    "id": utils.get_from_dict(self.campos_deputado["id"],
-                                              json_deputado),
+                    "id": id_parlamentar,
                     "nome": utils.get_from_dict(self.campos_deputado["nome"],
                                                 json_deputado).lower()
                                                               .title(),
                     json_fields["urlApiParlamentar"]: utils.get_from_dict(
                         self.campos_deputado["urlApiParlamentar"],
                         json_deputado),
-                    json_fields["urlParlamentar"]: self.campos_deputado[
-                        "urlParlamentar"],
+                    json_fields["urlParlamentar"]: (constants.SITE_CAMARA +
+                                                    "deputados/"
+                                                    f"{id_parlamentar}"),
                     "siglaPartido": utils.get_from_dict(
                         self.campos_deputado["siglaPartido"],
                         json_deputado),
@@ -172,9 +174,6 @@ class Deputado(Parlamentar):
             url_autores_pl = (constants.URL_API_CAMARA +
                               f"proposicoes/{proposicao}/autores")
             dados_autores = utils.get_request(url_autores_pl).json()
-            print('A'*30)
-            print(dados_autores)
-            print('A'*30)
             dados_deputado = {
                 json_fields["deputado"]: {
                     "id": None,

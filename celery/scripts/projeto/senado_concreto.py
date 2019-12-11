@@ -210,38 +210,6 @@ class ProjetoSenado(Projeto):
             "urlPL": url_pl,
             "casa": "Senado"
         }
-        # print('JSON')
-        # print(json_projeto)
-        # print('JSON')
-        # dados_pl = {
-        #     "ongName": ong_name,
-        #     "ementa": utils.get_from_dict(
-        #         self.campos_banco["ementa"],
-        #         json_projeto
-        #     ),
-        #     "tramitacao": crawl.crawl_tramitacao(
-        #         json_projeto["DetalheMateria"]
-        #                     ["Materia"]
-        #                     ["IdentificacaoMateria"]
-        #                     ["CodigoMateria"]),
-        #     "situacao": situacao_pl.lower().capitalize(),
-        #     "sigla": utils.get_from_dict(
-        #         self.campos_banco["sigla"],
-        #         json_projeto
-        #     ),
-        #     "numero": utils.get_from_dict(
-        #         self.campos_banco["numero"],
-        #         json_projeto
-        #     ).strip("0"),
-        #     "ano": utils.get_from_dict(
-        #         self.campos_banco["ano"],
-        #         json_projeto
-        #     )
-        # }
-        # print('DADOS PL')
-        # print(dados_pl)
-        # print('DADOS PL')
-        # sys.exit(1)
         return dados_pl
 
     def save_senado_project(self, projetos, keywords, ong):

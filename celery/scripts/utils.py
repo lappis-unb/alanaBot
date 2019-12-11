@@ -39,7 +39,7 @@ def can_connect(request_str):
         }
         req_projeto = get(request_str, headers=headers)
     except ConnectionError:
-        print("CONNECTION ERROR")
+        print("Connection Error")
         raise ConnectionError
     else:
         return req_projeto
