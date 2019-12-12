@@ -188,4 +188,5 @@ export.sh
 *.env
 outputs/
 .vscode/
+certbot/
 client_secret.json

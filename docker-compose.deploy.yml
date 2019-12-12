@@ -1,0 +1,149 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:1.15-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./src/data/nginx:/etc/nginx/conf.d
+      - ./src/data/certbot/conf:/etc/letsencrypt
+      - ./src/data/certbot/www:/var/www/certbot
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    depends_on:
+      - prod_bot
+      - prod_kibana
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./src/certbot/conf:/etc/letsencrypt
+      - ./src/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+  # PROD ------------------------------------------------------------------------------------------ #
+  
+  prod_bot:
+    container_name: prod_bot
+    build:
+      context: .
+      dockerfile: ./docker/bot.Dockerfile
+    env_file:
+      - env/bot-telegram.env
+    ports:
+      - 5001:5001
+    depends_on:
+      - prod_actions
+      - prod_database
+    volumes:
+      - ./bot:/bot
+    command: sh -c "make telegram"
+  
+  prod_actions:
+    build:
+      context: .
+      dockerfile: ./docker/actions.Dockerfile
+    ports:
+      - 5055:5055
+    env_file:
+      - env/bot-telegram.env
+    volumes:
+      - ./bot/actions:/bot/actions
+    command: sh -c "make run-actions"
+
+  prod_kibana:
+    container_name: prod_kibana
+    build:
+      context: .
+      dockerfile: ./docker/kibana.Dockerfile
+    restart: unless-stopped
+    ports:
+      - 5601:5601
+    env_file:
+      - env/kibana.env
+    depends_on:
+      - prod_elasticsearch
+  
+  prod_elasticsearch:
+    build:
+      context: .
+      dockerfile: ./docker/elasticsearch.Dockerfile
+    restart: unless-stopped
+    ports:
+      - 9200:9200
+      - 9300:9300
+    env_file:
+      - env/elasticsearch.env
+    volumes:
+      - esbackup:/usr/share/elasticsearch/backup
+      - ./modules/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - esdata:/usr/share/elasticsearch/data
+  
+  prod_rabbitmq:
+    image: rabbitmq:3-management
+    restart: unless-stopped
+    volumes:
+      - ./db/rabbitmq:/var/lib/rabbitmq
+    ports:
+      - 15672:15672
+    env_file:
+      - env/rabbitmq.env
+    
+  # Custom broker consumer responsible to store data into ElasticSearch.
+  prod_rabbitmq-consumer:
+    build:
+      context: .
+      dockerfile: ./docker/consumer.Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./modules/rabbitmq/consumer/:/opt/scripts/
+    depends_on:
+      - prod_rabbitmq
+    env_file:
+      - env/rabbitmq-consumer.env
+    command: python3 /opt/scripts/consume_bot_messages.py
+  
+  prod_database:
+    container_name: database-alana
+    image: mongo:latest
+    command: mongod
+    volumes:
+      - /alana/mongo-alana:/data/db
+    ports:
+      - 27017:27017
+
+  prod_celery: &prod_celery
+    container_name: celery-alana
+    build:
+      context: .
+      dockerfile: ./docker/celery.Dockerfile
+    volumes:
+        - ./outputs:/cronjob/home
+    env_file:
+      - env/celery.env
+    depends_on:
+        - prod_database
+        - prod_rabbitmq
+        - prod_elasticsearch
+  
+  prod_celery-beat:    
+    <<: *prod_celery
+    container_name: celery-beat-alana
+    command: ["celery", "-A", "tasks", "beat", 
+              "--app", "tasks.celeryapp", "-l", "info"]
+  
+  prod_celery-worker:
+    <<: *prod_celery
+    container_name: celery-worker-alana
+    depends_on:
+      - celery-beat
+    command: ["celery", "-A", "tasks", "worker",
+              "--app", "tasks.celeryapp", "-l", "info"]
+
+volumes:
+  mongo_data:
+  rabbit_data:
+  esbackup:
+  esdata:
+    driver: local
