@@ -3,6 +3,7 @@ import os
 import telegram
 import datetime
 import constants
+import random
 
 day_of_week = {
     "dom": 6,
@@ -43,11 +44,9 @@ def get_registered_users(ong):
 
 def send_notification(pls):
     bot = telegram.Bot(token=os.getenv("TELEGRAM_TOKEN", ""))
-    notification_msg = "Essas são as atualizações em projetos de lei a "\
-                       "respeito de crianças e adolescentes.\n"\
-                       "Observe que uma sociedade em que o interesse da "\
-                       "criança é prioridade, é um lugar melhor "\
-                       "para todos :)"
+    random_msgs = constants.notification_messages
+    msg_index = random.randint(0, len(random_msgs))
+    notification_msg = random_msgs[msg_index]
     ongs = get_ongs()
     for ong in ongs:
         registered_users = get_registered_users(ong)

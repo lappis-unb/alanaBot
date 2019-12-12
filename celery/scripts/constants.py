@@ -17,6 +17,46 @@ JSON_PALAVRAS_CHAVES = (
 QTY_DAYS = 1
 URL_API_SENADO = "http://legis.senado.leg.br/dadosabertos/"
 URL_WEB_SENADO = "https://www25.senado.leg.br/"
+notification_messages = [
+    "Bom dia! Aqui estão as atualizações em projetos de "
+    "lei a respeito de crianças e adolescentes.",
+    "Oi! Aqui estão as atualizações dos PLs "
+    "sobre crianças e adolescentes.\nLembre-se "
+    "que uma sociedade em que o melhor interesse "
+    "de crianças e adolescentes é prioridade, "
+    "é um lugar melhor para todos e todas",
+    "Cuidar de crianças e adolescentes é cuidar de todos "
+    "nós!\nAqui estão as atualizações do dia :)",
+    "Olá, aqui estão as atualizações do dia!\n"
+    "Seguimos juntas e juntos em defesa dos "
+    "direitos de crianças e adolescentes.",
+    "Vamos agir em defesa de crianças e "
+    "adolescentes? Esse é o momento!\n"
+    "Veja as atualizações do dia:",
+    "Bom dia! Crianças e adolescentes "
+    "devem ser prioridade absoluta no "
+    "seu dia também!\nAcompanhe as atualizações "
+    "de hoje em projetos de lei sobre o tema.",
+    "Olá! Defender os direitos de crianças e "
+    "adolescentes é um dever de todos nós!\n"
+    "Acompanhe os projetos de lei sobre o tema.",
+    "Seja um ativista pela infância e "
+    "adolescência!\nAqui estão as atualizações "
+    "de projetos de lei sobre crianças e adolescentes.",
+    "Bom dia! A hora de garantir os direitos de "
+    "crianças e adolescentes é agora!\n"
+    "Acompanhe as atualizações de hoje "
+    "em projetos de lei sobre o tema.",
+    "Oi, tudo bem por aí? Vamos garantir "
+    "que esteja tudo bem com as crianças e "
+    "os adolescentes também?\nAqui estão "
+    "as atualizações do dia.",
+    "Essas são as atualizações em projetos de lei a "
+    "respeito de crianças e adolescentes.\n"
+    "Observe que uma sociedade em que o interesse da "
+    "criança é prioridade, é um lugar melhor "
+    "para todos :)"
+]
 es = Elasticsearch([os.getenv("ELASTICSEARCH_URL", "elasticsearch:9200")])
 states_coord = {
     "AC": {
