@@ -127,7 +127,7 @@ services:
         - prod_rabbitmq
         - prod_elasticsearch
   
-  prod_celery-beat:    
+  prod-celery-beat:    
     <<: *prod_celery
     container_name: celery-beat-alana
     command: ["celery", "-A", "tasks", "beat", 
@@ -137,7 +137,7 @@ services:
     <<: *prod_celery
     container_name: celery-worker-alana
     depends_on:
-      - celery-beat
+      - prod-celery-beat
     command: ["celery", "-A", "tasks", "worker",
               "--app", "tasks.celeryapp", "-l", "info"]
 

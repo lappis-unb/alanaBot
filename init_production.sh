@@ -2,7 +2,7 @@
 
 domains=(bot.alana.org.br kibana.alana.org.br)
 rsa_key_size=4096
-data_path="../src/data/certbot"
+data_path="./src/certbot"
 email="" # Adding a valid address is strongly recommended
 staging=1 # Set to 1 if you're testing your setup to avoid hitting request limits
 composefile=./docker-compose.deploy.yml

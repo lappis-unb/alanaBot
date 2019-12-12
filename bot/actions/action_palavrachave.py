@@ -53,7 +53,7 @@ class ActionPalavraChave(Action):
 
     def build_menu(self, sender_id):
         buttons = []
-        sheet = self.connect_sheet("Respostas ao formulário 1")
+        sheet = self.connect_sheet("Cadastro de palavras chaves")
         ongs = self.get_column_values(sheet, 1)
         for ong in ongs:
             buttons.append({

@@ -45,7 +45,7 @@ def get_registered_users(ong):
 def send_notification(pls):
     bot = telegram.Bot(token=os.getenv("TELEGRAM_TOKEN", ""))
     random_msgs = constants.notification_messages
-    msg_index = random.randint(0, len(random_msgs))
+    msg_index = random.randint(0, len(random_msgs) - 1)
     notification_msg = random_msgs[msg_index]
     ongs = get_ongs()
     for ong in ongs:

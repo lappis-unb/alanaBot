@@ -67,7 +67,7 @@ class GoogleForms():
 
 if __name__ == "__main__":
     gs = GoogleForms(constants.SHEET_ID)
-    sheet = gs.connect_sheet("Respostas ao formulário 1")
+    sheet = gs.connect_sheet("Cadastro de palavras chaves")
     ongs = gs.get_column_values(sheet, 1)
     palavras_chaves = gs.get_column_values(sheet, 2)
     palavras_formatadas = gs.format_palavras_chaves(ongs, palavras_chaves)
