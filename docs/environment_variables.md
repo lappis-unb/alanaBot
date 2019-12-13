@@ -63,9 +63,9 @@ Esse `Id` será utilizado como uma das variáveis de ambiente para a escrita do 
 
 ### Exportando variáveis de ambiente para tarefas agendadas
 
-Substitua o TELEGRAM_TOKEN pelo token lhe enviado pelo @BotFather, conforme explicado no [tutorial de setup do telegram](/docs/Setup/setup_telegram.md) 
-SHEET_ID pelo ID da planilha do Google que você deseja que os 
-relatórios sejam salvos, SHEET_TEMPLATE_ID pela planilha do Google que será usada como template 
+Substitua o `TELEGRAM_TOKEN` pelo token lhe enviado pelo @BotFather, conforme explicado no [tutorial de setup do telegram](/docs/Setup/setup_telegram.md) 
+`SHEET_ID`s pelo `ID` da planilha do Google que você deseja que os 
+relatórios sejam salvos, `SHEET_TEMPLATE_ID` pela planilha do Google que será usada como template 
 para a criação do relatório e as variávies de configuração do `RABBITMQ` devem ser as mesmas definidas no serviço do `rabbitmq`. No final o arquivo `celery.env` localizado na pasta env na raíz do projeto, estará desse modo.
 
 ```sh
