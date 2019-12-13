@@ -66,6 +66,7 @@ services:
       - prod_elasticsearch
   
   prod_elasticsearch:
+    container_name: elasticsearch
     build:
       context: .
       dockerfile: ./docker/elasticsearch.Dockerfile
