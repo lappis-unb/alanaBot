@@ -1,6 +1,6 @@
 #!/bin/bash
 
-domains=(bot.alana.org.br kibana.alana.org.br)
+domains=(alanabot.lappis.rocks kibana.alanabot.lappis.rocks)
 rsa_key_size=4096
 data_path="./src/certbot"
 email="" # Adding a valid address is strongly recommended
