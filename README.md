@@ -2,10 +2,7 @@
 <!-- badges -->
 <a href="https://www.gnu.org/licenses/gpl-3.0.pt-br.html"><img src="https://img.shields.io/badge/licence-GPL3-green.svg"/></a>
 
-Bot para enviar notificações sobre politicas de crianças e adolescentes.
-Esse projeto tem como base o [boilerplate](https://github.com/lappis-unb/rasa-ptbr-boilerplate).
 
-## For English version, see [README-en](docs/README-en.md)
 
 ## Tutorial para configurar todo o projeto
 
@@ -20,46 +17,31 @@ no canto inferior direito da sua tela. Este `mensageiro` é o **WebChat**.
 
 Tudo está dockerizado então você não terá problemas de instalação do ambiente.
 
-## Introdução
+## Sobre  o bot
 
-Um projeto feito em Rasa com configurações necessárias para a construção de um projeto grande de chatbot.
+ O bot tem como objetivo o envio de notificações sobre Projetos de Lei. Esse objetivo é concretizado por meio do monitoramento das APIs da [Cãmara dos deputados](https://dadosabertos.camara.leg.br/swagger/api.html) e do [Senado](https://www12.senado.leg.br/dados-abertos), por meio da execução de atividades regulares utilizando o [Celery](https://docs.celeryproject.org/en/latest/getting-started/introduction.html). Também foram utilizadas planilhas e formulários do Google junto com a [API do Google Sheets](https://developers.google.com/sheets/api) para a escolha do usuário sobre os temas que as notificações devem abordar, além da elaboração de relatórios contendo os Projetos de Lei em Planilhas do Google.
 
-Este projeto teve como base o projeto [Tais](http://github.com/lappis-unb/tais).
 
-### Entenda a Arquitetura
+### Dependências do Relatório nas planilhas do Google 
 
-É utilizado no boilerplate diversas tecnologias que interagem entre si para obter um melhor resultado. Veja a arquitetura implementada:
+Para a elaboração dos relatórios nas Planilhas do Google é necessário o acesso a [API do Google Sheets](https://developers.google.com/sheets/api), portanto um arquivo de configuração para o acesso a API com o nome `client_secret.json` deve ser adicionado na raíz do projeto. Para a geração desse arquivo de configuração visite esse tutorial de [setup da API do google sheets](/docs/setup_google_sheet.md), que abrange desde a criação de um projeto no Google Console até a geração do arquivo de configuração necessário para o correto funcionamento das atividades relacionadas ao relatório.
 
-![](https://user-images.githubusercontent.com/8556291/57933140-d8d66b80-7892-11e9-8d58-a7eda60b099b.png)
 
-O usuário interage com a Boilerplate via Telegram, que manda as mensagens para o Rasa NLU através de
-conectores, onde ele identifica a *intent*, e responde pelo Rasa Core, de acordo com as *stories* e *actions*.  
-As *models* utilizadas para a conversação foram geradas pelo módulo *trainer* e depois transferidas para o bot, estes
-modelos podem ser versionados e evoluídos entre bots.  
-Os notebooks avaliam o funcionamento de acordo com o formato das *intents* e *stories*.
-O elasticsearch coleta os dados da conversa e armazena para a análise feita pelo kibana, que gera gráficos para
-avaliação das conversas dos usuários e do boilerplate.
+### Criação de planilhas do Google
 
-### Bot
+Para a elaboração de relatórios nas planilhas do Google é necessário que existam duas planilhas, uma utilizada como template para o relatório incluindo toda formatação de fontes, estilo, espaçamento da linha de colunas e outros. A segunda planilha conterá o relatório de fato e será atualizada diariamente com os Projetos de Lei do dia anterior. Para uma explicação mais detalhada sobre criação das planilhas visite esse [tutorial para a criação de planilhas](/docs/environment_variables.md).
 
-Este script foi configurado para construir as imagens genéricas necessárias para execução deste ambiente.
+### Criação de formulários
+
+Além disso os relatórios colhem respostas de dois formulários. Um deles serve para seleção de temas que as notificações devem abordar e outro serve para o cadastro de notificações para um dia específico a partir do usuário, para a criação e linkagem desses formulários com as planilhas do Google visite esse [tutorial para criação de formulários](/docs/google_forms_report.md)
+
+
+### Geração de imagens genéricas
+
+O script `first-run` contido no Makefile foi configurado para construir as imagens genéricas necessárias para execução deste ambiente.
 Caso seu projeto utilize este boilerplate e vá realizar uma integração contínua ou similar, é interessante
 criar um repositório para as imagens e substitua os nomes das imagens "lappis/bot", e "lappis/botrequirements" pelas suas respectivas novas imagens, por exemplo "<organização>/bot" em repositório público.
 
-
-### Treinamento
-
-**Atenção**: o comando de treinamento é usado para criar os modelos necessários na conversação do bot para treinar o seu chatbot execute o comando:
-
-```sh
-sudo make train
-```
-
-### Console
-
-```sh
-sudo make run-console
-```
 
 ### Telegram
 
@@ -85,7 +67,19 @@ sudo make train
 Depois execute o bot no telegram:
 
 ```sh
-sudo make run-telegram
+sudo docker-compose up -d bot_telegram
+```
+
+### Exportação de variávies de ambientes
+
+Após seguir todos os passos até aqui, é necessário realizar a exportação de todas as variáveis de ambiente do serviço utilizado para agendamento de atividades regulares, após seguir o [tutorial de exportação de variáveis](/docs/environment_variables.md) o arquivo `celery.env` deve ficar parecido com esse.
+```sh
+TELEGRAM_TOKEN=token
+TELEGRAM_DB_URI=mongodb://database-alana:27017/bot
+SHEET_ID=your_sheet_id
+SHEET_TEMPLATE_ID=your_sheet_template_id
+RABBITMQ_DEFAULT_USER=admin
+RABBITMQ_DEFAULT_PASS=admin
 ```
 
 ### Analytics
@@ -108,34 +102,8 @@ Nas próximas vezes que desejar utilizar o `analytics` execute o comando:
 sudo make run-analytics
 ```
 
-Por fim acesse o **kibana** no `locahost:5601`
+Por fim acesse o **kibana** no `locahost:5601`.
 
-* **Explicação completa:**
-
-Em primeiro lugar para fazer o setup do analytics é necessário subir o RabiitMQ e suas configurações.
-
-Inicie o serviço do servidor do RabbitMQ:
-
-```sh
-sudo docker-compose up -d rabbitmq
-```
-
-Inicie o serviço do consumidor do RabbitMQ, que ficará responsável por enviar as mensagens para o ElasticSearch:
-
-```sh
-sudo docker-compose up -d rabbitmq-consumer
-```
-
-Lembre-se de configurar as seguintes variáveis de ambiente do serviço `rabbitmq-consumer` no `docker-compose`.
-
-```sh
-ENVIRONMENT_NAME=localhost
-BOT_VERSION=last-commit-hash
-RABBITMQ_DEFAULT_USER=admin
-RABBITMQ_DEFAULT_PASS=admin
-```
-
-Sendo que as configurações de `RABBITMQ_DEFAULT_USER` e `RABBITMQ_DEFAULT_PASS` devem ser as mesmas definidas no serviço do `rabbitmq`.
 
 #### Integração com Rasa
 
@@ -153,7 +121,7 @@ event_broker:
 Ao final é necessário buildar novamente o container do bot.
 
 ```
-sudo docker-compose up --build -d bot
+sudo docker-compose up --build -d bot_telegram
 ```
 
 ### Configuração ElasticSearch

@@ -65,13 +65,13 @@ train-prod:
 	docker-compose -f docker-compose-prod.yml run --rm prod_bot rasa train -vv --out models/
 
 build-analytics-prod:
-	docker-compose -f docker-compose-prod.yml up -d elasticsearch
-	docker-compose -f docker-compose-prod.yml up -d rabbitmq
-	docker-compose -f docker-compose-prod.yml up -d rabbitmq-consumer
-	docker-compose -f docker-compose-prod.yml up -d kibana
+	docker-compose -f docker-compose.deploy.yml up -d elasticsearch
+	docker-compose -f docker-compose.deploy.yml up -d rabbitmq
+	docker-compose -f docker-compose.deploy.yml up -d rabbitmq-consumer
+	docker-compose -f docker-compose.deploy.yml up -d kibana
 	sleep 30
-	docker-compose -f docker-compose-prod.yml run --rm -v $(current_dir)/modules/analytics/setup_elastic.py:/analytics/setup_elastic.py bot python /analytics/setup_elastic.py
-	docker-compose -f docker-compose-prod.yml run --rm -v $(current_dir)/modules/analytics/:/analytics/ bot python /analytics/import_dashboards.py
+	docker-compose -f docker-compose.deploy.yml run --rm -v $(current_dir)/modules/analytics/setup_elastic.py:/analytics/setup_elastic.py bot python /analytics/setup_elastic.py
+	docker-compose -f docker-compose.deploy.yml run --rm -v $(current_dir)/modules/analytics/:/analytics/ bot python /analytics/import_dashboards.py
 
 validate:
 	docker-compose run --rm coach rasa data validate --domain domain.yml --data data/ -vv

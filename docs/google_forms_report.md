@@ -8,7 +8,7 @@ Os formulários do Google são utilizados em duas funcionalidades. Uma delas par
 
 O formulário de cadastro de palavras chaves contém duas perguntas, uma delas é a divisão que a pessoa pertence e a segunda é sobre as palavras chaves que devem ser enviadas para pessoas pertencentes a essa divisão. 
 
-Já o formulário de cadastro de newsletter possui três perguntas. A primeira pergunta é a mensagem que deve ser enviada na notificação, a segunda se refere a qual organização essa notificação deve ser enviada e a última pergunta se refere a data em que essa notificação deve ser enviada..
+Já o formulário de cadastro de newsletter possui três perguntas. A primeira pergunta é a mensagem que deve ser enviada na notificação, a segunda se refere a qual organização essa notificação deve ser enviada e a última pergunta se refere a data em que essa notificação deve ser enviada.
 
 ### Linkagem dos formulários com as planilhas existentes
 
