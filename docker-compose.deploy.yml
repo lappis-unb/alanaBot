@@ -18,8 +18,8 @@ services:
   certbot:
     image: certbot/certbot
     volumes:
-      - ./src/certbot/conf:/etc/letsencrypt
-      - ./src/certbot/www:/var/www/certbot
+      - ./src/data/certbot/conf:/etc/letsencrypt
+      - ./src/data/certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   # PROD ------------------------------------------------------------------------------------------ #
