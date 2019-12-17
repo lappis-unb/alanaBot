@@ -12,7 +12,7 @@ services:
       - ./src/data/certbot/www:/var/www/certbot
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     depends_on:
-      # - prod_bot
+      - prod_bot
       - prod_kibana
 
   certbot:
@@ -36,11 +36,14 @@ services:
     depends_on:
       - prod_actions
       - prod_database
+      - prod_rabbitmq-consumer
+      - prod_celery-worker 
     volumes:
       - ./bot:/bot
     command: sh -c "make telegram"
   
   prod_actions:
+    container_name: actions
     build:
       context: .
       dockerfile: ./docker/actions.Dockerfile
@@ -82,6 +85,7 @@ services:
       - esdata:/usr/share/elasticsearch/data
   
   prod_rabbitmq:
+    container_name: rabbitmq
     image: rabbitmq:3-management
     restart: unless-stopped
     volumes:
@@ -139,6 +143,8 @@ services:
     container_name: celery-worker-alana
     depends_on:
       - prod-celery-beat
+    env_file:
+      - env/celery.env 
     command: ["celery", "-A", "tasks", "worker",
               "--app", "tasks.celeryapp", "-l", "info"]
 

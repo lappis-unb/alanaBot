@@ -57,7 +57,11 @@ notification_messages = [
     "criança é prioridade, é um lugar melhor "
     "para todos :)"
 ]
-es = Elasticsearch([os.getenv("ELASTICSEARCH_URL", "elasticsearch:9200")])
+es_user = os.getenv("ELASTIC_USER")
+es_pass = os.getenv("ELASTIC_PASS")
+es = Elasticsearch([os.getenv("ELASTICSEARCH_URL", "elasticsearch:9200")],
+                   http_auth=(es_user, es_pass.replace('"', '')))
+
 states_coord = {
     "AC": {
         "lat": -8.77,

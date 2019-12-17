@@ -62,7 +62,7 @@ train:
 	# docker-compose build bot
 
 train-prod:
-	docker-compose -f docker-compose-prod.yml run --rm prod_bot rasa train -vv --out models/
+	docker-compose -f docker-compose.deploy.yml run --rm prod_bot rasa train -vv --out models/
 
 build-analytics-prod:
 	docker-compose -f docker-compose.deploy.yml up -d elasticsearch

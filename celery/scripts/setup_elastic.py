@@ -3,6 +3,8 @@ import os
 import argparse
 
 from elasticsearch import Elasticsearch
+from elasticsearch.exceptions import AuthorizationException
+
 
 parser = argparse.ArgumentParser(description="configures elastic")
 parser.add_argument(
@@ -13,8 +15,10 @@ args = parser.parse_args()
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-es = Elasticsearch([os.getenv("ELASTICSEARCH_URL", "elasticsearch:9200")])
-
+es_user = os.getenv("ELASTIC_USER")
+es_pass = os.getenv("ELASTIC_PASS")
+es = Elasticsearch([os.getenv("ELASTICSEARCH_URL", "elasticsearch:9200")],
+                   http_auth=(es_user, es_pass.replace('"', '')))
 settings = {
     "settings": {
         "analysis": {
