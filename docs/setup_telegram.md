@@ -41,12 +41,16 @@ TELEGRAM_WEBHOOK=link_do_ngrok/webhooks/telegram/webhook
 
 ## Execução do bot no telegram
 
-Ao final de realizar essas configurações, seu [arquivo de configurações do bot](../docker/bot-telegram.env) deve estar de acordo com o exibido logo abaixo:
+Ao final de realizar essas configurações, seu [arquivo de configurações do bot](../docker/bot-telegram.env) deve estar de acordo com o exibido logo abaixo sendo que a variável SHEET_ID representa a planilha utilizada para o relatório, explicado no [documento de configuração de arquivos](/docs/environment_variables.md):
 
 ```sh
-TELEGRAM_BOT_USERNAME=lappisbot
+TELEGRAM_BOT_USERNAME=lappis_bot
 TELEGRAM_TOKEN=token
 TELEGRAM_WEBHOOK=your_webhook_server/webhooks/telegram/webhook
+TELEGRAM_DB_URI=mongodb://database-alana:27017/bot
+SHEET_ID=your_sheet_id
+# Disable gui
+MPLBACKEND=agg
 ```
 
 Com isso, é possível realizar a execução do bot seguindo os passos do [README](../README.md)

@@ -154,7 +154,7 @@ O Kibana nos auxilia com uma interface para criação de visualização para os 
 sudo docker-compose up -d kibana
 ```
 
-**Atenção:** Caso queira configurar permissões diferentes de usuários (Login) no ElasticSearch/Kibana, siga esse tutorial ([link](https://github.com/lappis-unb/rasa-ptbr-boilerplate/tree/master/docs/setup_user_elasticsearch.md)).
+**Atenção:** Caso queira configurar permissões diferentes de usuários (Login) no ElasticSearch/Kibana, siga esse [tutorial](/docs/Tutoriais/setup_user_elasticsearch.md).
 
 #### Importação de dashboards
 

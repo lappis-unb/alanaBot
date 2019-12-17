@@ -66,7 +66,7 @@ Esse `Id` será utilizado como uma das variáveis de ambiente para a escrita do 
 Substitua o `TELEGRAM_TOKEN` pelo token lhe enviado pelo @BotFather, conforme explicado no [tutorial de setup do telegram](/docs/Setup/setup_telegram.md) 
 `SHEET_ID`s pelo `ID` da planilha do Google que você deseja que os 
 relatórios sejam salvos, `SHEET_TEMPLATE_ID` pela planilha do Google que será usada como template 
-para a criação do relatório e as variávies de configuração do `RABBITMQ` devem ser as mesmas definidas no serviço do `rabbitmq`. No final o arquivo `celery.env` localizado na pasta env na raíz do projeto, estará desse modo.
+para a criação do relatório e as variávies de configuração do `RABBITMQ` devem ser as mesmas definidas no serviço do `rabbitmq`. No final o arquivo `celery.env` localizado na pasta env na raíz do projeto, estará desse modo. Também são necessáriass as credenciais de login do elasticsearch, caso habilitada.
 
 ```sh
 TELEGRAM_TOKEN=token
@@ -75,4 +75,6 @@ SHEET_ID=your_sheet_id
 SHEET_TEMPLATE_ID=your_sheet_template_id
 RABBITMQ_DEFAULT_USER=admin
 RABBITMQ_DEFAULT_PASS=admin
+ELASTIC_USER=elastic_user
+ELASTIC_PASS=elastic_pass
 ```

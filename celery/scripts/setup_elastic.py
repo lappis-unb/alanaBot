@@ -3,8 +3,6 @@ import os
 import argparse
 
 from elasticsearch import Elasticsearch
-from elasticsearch.exceptions import AuthorizationException
-
 
 parser = argparse.ArgumentParser(description="configures elastic")
 parser.add_argument(
