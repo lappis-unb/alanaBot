@@ -3,6 +3,9 @@
 <a href="https://www.gnu.org/licenses/gpl-3.0.pt-br.html"><img src="https://img.shields.io/badge/licence-GPL3-green.svg"/></a>
 
 
+## Sobre  o bot
+
+ O bot desenvolvido com a [Alana](https://alana.org.br/) uma organização que promove o direito e o desenvolvimento integral da criança e ​fomenta​ novas formas de bem viver, tem como objetivo o envio de notificações sobre Projetos de Lei com o foco em Projetos que possuam em pauta os Direitos das Crianças e dos Adolescentes. Esse objetivo é concretizado por meio do monitoramento das APIs da [Cãmara dos deputados](https://dadosabertos.camara.leg.br/swagger/api.html) e do [Senado](https://www12.senado.leg.br/dados-abertos), por meio da execução de atividades regulares utilizando o [Celery](https://docs.celeryproject.org/en/latest/getting-started/introduction.html). Também foram utilizadas planilhas e formulários do Google junto com a [API do Google Sheets](https://developers.google.com/sheets/api) para a escolha do usuário sobre os temas que as notificações devem abordar, além da elaboração de relatórios contendo os Projetos de Lei em Planilhas do Google.
 
 ## Tutorial para configurar todo o projeto
 
@@ -16,10 +19,6 @@ Este comando irá construir o seu chatbot (containers necessários) e abrir a co
 no canto inferior direito da sua tela. Este `mensageiro` é o **WebChat**.
 
 Tudo está dockerizado então você não terá problemas de instalação do ambiente.
-
-## Sobre  o bot
-
- O bot tem como objetivo o envio de notificações sobre Projetos de Lei. Esse objetivo é concretizado por meio do monitoramento das APIs da [Cãmara dos deputados](https://dadosabertos.camara.leg.br/swagger/api.html) e do [Senado](https://www12.senado.leg.br/dados-abertos), por meio da execução de atividades regulares utilizando o [Celery](https://docs.celeryproject.org/en/latest/getting-started/introduction.html). Também foram utilizadas planilhas e formulários do Google junto com a [API do Google Sheets](https://developers.google.com/sheets/api) para a escolha do usuário sobre os temas que as notificações devem abordar, além da elaboração de relatórios contendo os Projetos de Lei em Planilhas do Google.
 
 
 ### Dependências do Relatório nas planilhas do Google 
@@ -81,6 +80,16 @@ SHEET_TEMPLATE_ID=your_sheet_template_id
 RABBITMQ_DEFAULT_USER=admin
 RABBITMQ_DEFAULT_PASS=admin
 ```
+
+### Realizando deploy de todo ambiente
+
+Caso queira realizar o deploy de todo o ambiente de desenvolvimento, existe um docker-compose especialmente para isso. Esse [arquivo](docker-compose.deploy.yml) possui todos os serviços disponíveis no docker-compose, com as especifidades de conversarem com dois outros: O Nginx e o Certbot, serviços responsáveis pela realização do proxy-reverso e da geração dos certificados SSL respectivamente. Para tudo isso funcionar corretamente basta alterar os arquivos http.conf e ssl.conf localizados na pasta /src/data/nginx e também o script `init_production.sh`.
+Com esses arquivos configurados basta executar os seguintes comandos e os serviços estarão funcionando corretamente na sua infraestrutura.
+
+```sh
+chmod +x init_production.sh
+sudo ./init_production.sh
+``` 
 
 ### Analytics
 
