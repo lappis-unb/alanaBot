@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 es_user = os.getenv("ELASTIC_USER")
 if es_user is not None:
     es_pass = os.getenv("ELASTIC_PASS")
-    logger.debug(es_user,'\n',es_pass)
     es = Elasticsearch([os.getenv("ELASTICSEARCH_URL", "elasticsearch:9200")],
                        http_auth=(es_user, es_pass))
 else:

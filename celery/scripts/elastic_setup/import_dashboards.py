@@ -77,7 +77,6 @@ def createIndexPattern():
         requests.post(
             url=requestData[0], headers=requestData[1], data=json.dumps(datas)
         )
-    
 
 
 if __name__ == "__main__":

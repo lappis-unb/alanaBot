@@ -35,6 +35,23 @@ Para a elaboração de relatórios nas planilhas do Google é necessário que ex
 Além disso os relatórios colhem respostas de dois formulários. Um deles serve para seleção de temas que as notificações devem abordar e outro serve para o cadastro de notificações para um dia específico a partir do usuário, para a criação e linkagem desses formulários com as planilhas do Google visite esse [tutorial para criação de formulários](/docs/google_forms_report.md)
 
 
+### Visualizações sobre Projetos de Leis
+
+Foram feitas visualizações sobre Projetos de Leis elas englobam nuvem de palavras sobre as Ementas/Tramitações de Projetos de Leis, partidos com maior núemro de relatorias e autorias de PLs além de palavras chaves contidas em Projetos de Lei. Abaixo estão exibidas algumas dessas visualizações
+
+#### Nuvem de palavras de Ementas
+![nuvem palavras](/docs/imgs/visualizations/nuvem_palavras_ementa.png)
+
+#### Palavras chaves de Projetos de Leis
+![palavras chaves](/docs/imgs/visualizations/palavra_chave_pl.png)
+
+#### Parlamentares com maior número de autorias
+![parlamentares autoria](/docs/imgs/visualizations/parlamentares_autoria.png)
+
+#### Partidos com maior número de relatorias
+![partidos relatoria](/docs/imgs/visualizations/partidos_relatoria.png)
+
+
 ### Geração de imagens genéricas
 
 O script `first-run` contido no Makefile foi configurado para construir as imagens genéricas necessárias para execução deste ambiente.
