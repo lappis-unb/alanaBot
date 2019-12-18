@@ -46,11 +46,8 @@ class ElasticConnector:
             self.es = Elasticsearch([domain])
         else:
             self.es = Elasticsearch(
-                [
-                    "{}://{}:{}@{}:{}".format(
-                        scheme, user, password, domain, scheme_port
-                    )
-                ]
+                [domain],
+                http_auth=(user, password)
             )
 
         self.previous_action = None

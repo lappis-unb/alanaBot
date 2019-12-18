@@ -5,7 +5,6 @@ username = os.getenv("RABBITMQ_DEFAULT_USER")
 password = os.getenv("RABBITMQ_DEFAULT_USER")
 
 broker_url = f'pyamqp://{username}:{password}@rabbitmq//'
-result_backend = 'elasticsearch://elasticsearch:9200/tasks/task'
 
 task_serializer = 'json'
 result_serializer = 'json'
@@ -15,17 +14,17 @@ enable_utc = False
 include = ['tasks.celerytasks']
 
 beat_schedule = {
-    'seed_db': {
-        'task': 'tasks.celerytasks.seed_db',
+    'seed_google_forms': {
+        'task': 'tasks.celerytasks.seed_google_forms',
         'schedule': crontab(hour=8, minute=30,
                             day_of_week='mon,tue,'
                                         'wed,thu,'
                                         'fri'),
         'args': ()
     },
-    'seed_google_forms': {
-        'task': 'tasks.celerytasks.seed_google_forms',
-        'schedule': crontab(hour=8, minute=40,
+    'seed_db': {
+        'task': 'tasks.celerytasks.seed_db',
+        'schedule': crontab(hour=8, minute=35,
                             day_of_week='mon,tue,'
                                         'wed,thu,'
                                         'fri'),

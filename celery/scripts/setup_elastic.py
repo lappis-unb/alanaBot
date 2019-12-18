@@ -14,9 +14,12 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 es_user = os.getenv("ELASTIC_USER")
-es_pass = os.getenv("ELASTIC_PASS")
-es = Elasticsearch([os.getenv("ELASTICSEARCH_URL", "elasticsearch:9200")],
-                   http_auth=(es_user, es_pass.replace('"', '')))
+if es_user is not None:
+    es_pass = os.getenv("ELASTIC_PASS")
+    es = Elasticsearch([os.getenv("ELASTICSEARCH_URL", "elasticsearch:9200")],
+                    http_auth=(es_user, es_pass))
+else:
+    es = Elasticsearch([os.getenv("ELASTICSEARCH_URL", "elasticsearch:9200")])
 settings = {
     "settings": {
         "analysis": {

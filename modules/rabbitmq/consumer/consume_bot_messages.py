@@ -6,7 +6,7 @@ import logging
 from elastic_connector import ElasticConnector
 
 username = os.getenv("RABBITMQ_DEFAULT_USER")
-password = os.getenv("RABBITMQ_DEFAULT_USER")
+password = os.getenv("RABBITMQ_DEFAULT_PASS")
 credentials = pika.PlainCredentials(username, password)
 
 logger = logging.getLogger(__name__)
