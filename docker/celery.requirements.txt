@@ -8,4 +8,4 @@ gspread-formatting==0.0.7
 XlsxWriter==1.2.1
 elasticsearch==7.0.4
 nltk==3.4.5
-celery==4.3.0
+celery==5.2.2
